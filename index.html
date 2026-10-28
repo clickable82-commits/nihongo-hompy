@@ -1,0 +1,983 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>나의 일본어 홈피 · 초급 1~15과</title>
+<style>
+  :root {
+    --ink: #4b4b4b; --sub: #8c8c8c; --line: #f2c9d6; --dot: #f0b4c6; --orange: #ff8a00; --sky: #ff6f9f; --sky-l: #ffeef4;
+    --pink: #ff7fa8; --ok: #2fae7a; --ng: #e8554e; --paper: #ffffff; --bg: #fbe6ee;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { width: 100%; height: 100%; overflow: hidden; color: var(--ink); font-family: Gulim, "New Gulim", "Malgun Gothic", sans-serif; font-size: 12px;
+    background-color: var(--bg); background-image: radial-gradient(#f5c9d8 1px, transparent 1px); background-size: 8px 8px; }
+  .jp { font-family: "Yu Gothic", "Meiryo", sans-serif; font-weight: 600; }
+  #stage { position: absolute; left: 50%; top: 50%; width: 960px; height: 672px; transform-origin: center; }
+  .hompy { position: absolute; inset: 0; background: #fff6f9; border: 1px solid #e79ab4; border-radius: 12px; box-shadow: 0 0 0 6px #f8d3df, 0 14px 40px rgba(60,90,120,0.25); }
+  .top { position: absolute; left: 14px; right: 110px; top: 10px; height: 28px; display: flex; align-items: center; justify-content: space-between; }
+  .top .title { font-size: 15px; font-weight: bold; color: #d2557f; letter-spacing: -0.3px; }
+  .top .title span { color: var(--orange); }
+  .counter { font-size: 11px; color: var(--sub); }
+  .counter b { color: var(--orange); font-family: Verdana, sans-serif; }
+  .counter i { font-style: normal; color: var(--sky); font-family: Verdana, sans-serif; font-weight: bold; }
+  .box { position: absolute; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; }
+  .left { left: 12px; top: 44px; width: 200px; bottom: 12px; padding: 10px; }
+  .main { left: 220px; top: 44px; width: 622px; bottom: 12px; overflow: hidden; }
+  .dotline { border-top: 1px dashed var(--dot); margin: 8px 0; }
+  .today { font-size: 11px; color: var(--sub); }
+  .today b { color: var(--pink); }
+  #miniCv { display: block; width: 178px; height: 178px; margin: 6px auto; image-rendering: pixelated; background: linear-gradient(#ffeef4, #fff); border: 1px solid var(--line); border-radius: 6px; }
+  .pname { text-align: center; font-weight: bold; font-size: 13px; color: #d2557f; }
+  .pname small { display: block; font-weight: normal; color: var(--sub); font-size: 11px; margin-top: 2px; }
+  .stat { display: flex; justify-content: space-between; padding: 4px 2px; font-size: 12px; }
+  .stat b { color: var(--orange); font-family: Verdana, sans-serif; font-size: 12px; }
+  .bar { height: 8px; background: #fdeef3; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; margin: 2px 0 6px; }
+  .bar i { display: block; height: 100%; background: repeating-linear-gradient(45deg, #ff9dbc 0 4px, #ff7fa8 4px 8px); }
+  .ichon { font-size: 11px; color: var(--sub); line-height: 1.7; }
+  .ichon b { color: var(--ink); }
+  .tabs { position: absolute; right: 12px; top: 44px; width: 92px; display: flex; flex-direction: column; gap: 3px; }
+  .tab { background: #ff9dbc; color: #fff; border: 1px solid #f37aa2; border-left: 0; border-radius: 0 8px 8px 0; padding: 9px 10px; font-size: 12px; font-weight: bold; text-align: left; cursor: pointer; font-family: inherit; }
+  .tab.on { background: #fff; color: #d2557f; border-color: var(--line); }
+  .tab small { display: block; font-weight: normal; font-size: 10px; opacity: 0.85; }
+  .bgm { position: absolute; right: 12px; bottom: 12px; width: 92px; background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 6px; font-size: 10px; color: var(--sub); line-height: 1.4; }
+  .bgm b { color: var(--sky); display: block; min-height: 26px; }
+  .bgm .ctl { display: flex; gap: 3px; margin-top: 4px; }
+  .bgm button { flex: 1; border: 1px solid var(--line); background: #fff; border-radius: 3px; font-size: 10px; padding: 2px 0; cursor: pointer; color: var(--ink); font-family: inherit; }
+  .bgm button.on { background: var(--sky); color: #fff; border-color: var(--sky); }
+  /* 홈 · 마을 */
+  #cv { position: absolute; left: 0; top: 0; width: 620px; height: 560px; image-rendering: pixelated; border-radius: 8px 8px 0 0; }
+  .now { position: absolute; left: 0; right: 0; bottom: 0; height: 54px; border-top: 1px dashed var(--dot); display: flex; align-items: center; gap: 10px; padding: 0 14px; font-size: 13px; }
+  .now .tag { background: var(--orange); color: #fff; font-weight: bold; border-radius: 3px; padding: 2px 6px; font-size: 11px; }
+  .now small { color: var(--sub); }
+  .now .help { margin-left: auto; font-size: 11px; color: var(--sub); }
+  .view { position: absolute; inset: 0; padding: 16px 18px; overflow: auto; display: none; }
+  .view.on { display: block; }
+  .view h3 { font-size: 14px; color: #d2557f; border-bottom: 1px dashed var(--dot); padding-bottom: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; }
+  .view h3 small { color: var(--sub); font-weight: normal; }
+  /* 대화창 */
+  .dlg { position: absolute; left: 12px; right: 12px; bottom: 62px; background: #fff; border: 1px solid #e79ab4; border-radius: 6px; box-shadow: 0 4px 0 rgba(210,85,127,0.15); display: none; }
+  .dlg.on { display: block; }
+  .dhead { background: linear-gradient(#fff0f5, #ffd9e6); border-bottom: 1px solid var(--line); border-radius: 6px 6px 0 0; padding: 5px 10px; display: flex; justify-content: space-between; font-weight: bold; color: #d2557f; font-size: 12px; }
+  .dhead .u { color: var(--orange); }
+  .dbody { padding: 12px 16px 12px; }
+  .line-jp { font-size: 22px; line-height: 1.4; color: #333; }
+  .line-rd { font-size: 12px; color: var(--sub); margin-top: 4px; }
+  .line-ko { font-size: 12px; color: var(--sky); font-weight: bold; margin-top: 3px; min-height: 16px; }
+  .tools { display: flex; gap: 6px; margin-top: 8px; align-items: center; }
+  .tbtn { border: 1px solid var(--line); background: #f6f9fb; border-radius: 3px; padding: 3px 9px; font-size: 11px; color: var(--ink); cursor: pointer; font-family: inherit; }
+  .next { margin-left: auto; color: var(--orange); font-size: 11px; animation: blink 1s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: 0.2; } }
+  .ask { font-size: 12px; font-weight: bold; color: #d2557f; margin-bottom: 8px; }
+  .ask .big { font-size: 20px; color: #333; }
+  .ask .q { color: var(--orange); margin-right: 4px; }
+  .opts { display: grid; gap: 5px; }
+  .opt { text-align: left; border: 1px dashed var(--dot); background: #fffafc; border-radius: 4px; padding: 7px 12px; cursor: pointer; font-family: inherit; color: var(--ink); display: flex; align-items: center; gap: 10px; }
+  .opt:hover { border-style: solid; border-color: var(--orange); background: #fff8ef; }
+  .opt .o-jp { font-size: 17px; color: #333; }
+  .opt .o-rd { font-size: 11px; color: var(--sub); }
+  .opt.wrong { border: 1px solid var(--ng); background: #fff0ef; }
+  .opt.right { border: 1px solid var(--ok); background: #eefaf4; }
+  .fb { margin-top: 7px; font-size: 12px; font-weight: bold; min-height: 16px; }
+  .fb.ng { color: var(--ng); } .fb.ok { color: var(--ok); }
+  .shopgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+  .icard { border: 1px dashed var(--dot); background: #fffafc; border-radius: 4px; padding: 7px 9px; cursor: pointer; text-align: left; color: var(--ink); font-family: inherit; }
+  .icard:hover { border-style: solid; border-color: var(--orange); }
+  .icard .i-jp { font-size: 15px; color: #333; }
+  .icard .i-ko { font-size: 11px; color: var(--sub); }
+  .icard .i-p { margin-top: 3px; display: flex; justify-content: space-between; align-items: baseline; }
+  .icard .i-p b { color: var(--orange); font-family: Verdana, sans-serif; font-size: 12px; }
+  .icard .i-p span { font-size: 10px; color: var(--sub); }
+  .icard.owned { opacity: 0.4; cursor: default; }
+  .shopfoot { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 12px; }
+  /* 다이어리 · 사진첩 · 방명록 */
+  .diary li { list-style: none; display: flex; gap: 10px; padding: 7px 4px; border-bottom: 1px dotted var(--dot); font-size: 12px; align-items: center; }
+  .diary li .d { width: 74px; color: var(--sub); font-family: Verdana, sans-serif; font-size: 10px; }
+  .diary li .u { width: 40px; color: var(--sky); font-weight: bold; }
+  .diary li .s { margin-left: auto; font-size: 11px; }
+  .diary li.done .s { color: var(--ok); } .diary li.cur { background: #fff8ef; } .diary li.cur .s { color: var(--orange); }
+  .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .scard { border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; background: #fff; box-shadow: 2px 2px 0 #fbe1ea; }
+  .scard .s-jp { font-size: 15px; color: #333; }
+  .scard .s-rd { font-size: 11px; color: var(--sub); margin-top: 2px; }
+  .scard .s-ko { font-size: 12px; color: var(--sky); font-weight: bold; margin-top: 2px; }
+  .scard .s-where { font-size: 10px; color: #aab; margin-top: 3px; }
+  .scard.locked { border-style: dashed; color: #b8c4cf; display: flex; align-items: center; justify-content: center; min-height: 64px; box-shadow: none; }
+  .guest { border: 1px solid var(--line); border-radius: 4px; margin-bottom: 8px; background: #fff; }
+  .guest .gh { background: #fff3f7; border-bottom: 1px dotted var(--dot); padding: 5px 10px; font-size: 11px; display: flex; justify-content: space-between; color: var(--sub); }
+  .guest .gh b { color: #d2557f; }
+  .guest .gb { padding: 8px 10px; font-size: 12px; line-height: 1.6; }
+  .guest .gb .x { color: var(--ng); text-decoration: line-through; }
+  .guest .gb .o { color: var(--ok); font-weight: bold; }
+  .empty { color: var(--sub); text-align: center; padding: 40px 0; line-height: 1.8; }
+  #roomCv { display: block; width: 584px; height: 420px; image-rendering: pixelated; border: 1px solid var(--line); border-radius: 6px; margin: 0 auto; }
+  .note { font-size: 11px; color: var(--sub); margin-top: 8px; line-height: 1.6; }
+  .wear { display: grid; grid-template-columns: 220px 1fr; gap: 16px; }
+  #styleCv { width: 220px; height: 260px; image-rendering: pixelated; border: 1px solid var(--line); border-radius: 6px; background: linear-gradient(#ffeef4, #fff); }
+  .wlist { display: grid; gap: 5px; align-content: start; }
+  .wbtn { border: 1px dashed var(--dot); background: #fffafc; border-radius: 4px; padding: 7px 10px; color: var(--ink); font-family: inherit; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+  .wbtn.on { border: 1px solid var(--ok); background: #eefaf4; }
+  .wbtn.lock { opacity: 0.4; cursor: default; }
+  .wbtn small { color: var(--sub); font-size: 11px; }
+  .toast { position: absolute; top: 12px; left: 50%; transform: translate(-50%, -10px); background: #fffbe6; color: #b56a00; border: 1px solid #f2c46b; font-weight: bold; font-size: 12px; padding: 7px 16px; border-radius: 4px; opacity: 0; transition: all 0.3s; pointer-events: none; white-space: nowrap; box-shadow: 2px 2px 0 #f6e2b5; }
+  .toast.on { opacity: 1; transform: translate(-50%, 0); }
+  .end { position: absolute; inset: 0; background: rgba(255,255,255,0.8); display: none; align-items: center; justify-content: center; }
+  .end.on { display: flex; }
+  .end .card { width: 420px; background: #fff; border: 1px solid #e79ab4; border-radius: 8px; box-shadow: 0 4px 0 rgba(210,85,127,0.15); text-align: center; padding: 22px; }
+  .end .big { font-size: 34px; color: var(--orange); font-family: Verdana, sans-serif; font-weight: bold; margin: 6px 0; }
+  .end .row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 14px 0; }
+  .end .row div { border: 1px dashed var(--dot); border-radius: 4px; padding: 8px; }
+  .end .row b { display: block; font-size: 18px; font-family: Verdana, sans-serif; color: #d2557f; }
+  .bigbtn { border: 1px solid var(--orange); background: #fff8ef; color: var(--orange); font-weight: bold; font-size: 12px; padding: 7px 16px; border-radius: 4px; cursor: pointer; font-family: inherit; }
+  .range { position: absolute; inset: 0; background: rgba(255,246,249,0.94); display: none; align-items: center; justify-content: center; z-index: 5; }
+  .range.on { display: flex; }
+  .range .card { width: 440px; background: #fff; border: 1px solid #e79ab4; border-radius: 8px; box-shadow: 0 4px 0 rgba(210,85,127,0.15); padding: 22px 26px; text-align: center; }
+  .range h4 { font-size: 16px; color: #d2557f; margin-bottom: 4px; }
+  .range p { color: var(--sub); font-size: 12px; line-height: 1.6; }
+  .range .sel { display: flex; gap: 8px; justify-content: center; align-items: center; margin: 16px 0 6px; font-size: 13px; }
+  .range select { font-family: inherit; font-size: 13px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 4px; background: #fffafc; color: var(--ink); }
+  .range .cnt { color: var(--orange); font-weight: bold; font-size: 12px; margin-bottom: 14px; }
+  .range .book { font-size: 12px; color: var(--ink); background: var(--sky-l); border: 1px dashed var(--dot); border-radius: 4px; padding: 6px; margin-top: 10px; }
+  .pad { position: absolute; left: 10px; bottom: 64px; width: 120px; height: 120px; display: none; }
+  .pad button, .abtn { position: absolute; width: 40px; height: 40px; border-radius: 6px; border: 1px solid var(--line); background: rgba(255,255,255,0.9); font-size: 15px; color: var(--ink); }
+  .pad .u { left: 40px; top: 0; } .pad .d { left: 40px; bottom: 0; } .pad .lf { left: 0; top: 40px; } .pad .rt { right: 0; top: 40px; }
+  .abtn { right: 14px; bottom: 74px; width: 56px; height: 56px; border-radius: 50%; border-color: var(--orange); color: var(--orange); display: none; font-weight: bold; }
+  @media (pointer: coarse) { .pad, .abtn { display: block; } }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="hompy"></div>
+  <div class="top"><div class="title">♡ 나의 일본어 홈피 <span id="topRange">· 초급 1~15과</span></div><div class="counter">TODAY <b id="cToday">0</b> | TOTAL <i id="cTotal">0</i></div></div>
+  <div class="box left">
+    <div class="today">TODAY IS… <b>열공 중 ♪</b></div>
+    <canvas id="miniCv" width="60" height="60"></canvas>
+    <div class="pname">나 <small>초급 일본어 수강생</small></div>
+    <div class="dotline"></div>
+    <div class="stat"><span>진도</span><b id="sProg"></b></div>
+    <div class="bar"><i id="sBar"></i></div>
+    <div class="stat"><span>모은 문장</span><b id="sPhr"></b></div>
+    <div class="stat"><span>지갑</span><b id="sYen"></b></div>
+    <div class="stat"><span>미니룸 소품</span><b id="sRoom"></b></div>
+    <div class="dotline"></div>
+    <div class="ichon" id="ichon"></div>
+  </div>
+  <div class="box main" id="main">
+    <canvas id="cv" width="620" height="560"></canvas>
+    <div class="now" id="now"></div>
+    <div class="dlg" id="dlg"><div class="dhead"><span id="dName"></span><span class="u" id="dUnit"></span></div><div class="dbody" id="dBody"></div></div>
+    <div class="view" id="v-diary"></div>
+    <div class="view" id="v-photo"></div>
+    <div class="view" id="v-room"><h3><span>미니룸</span><small id="roomTitle"></small></h3><canvas id="roomCv" width="200" height="141"></canvas><div class="note" id="roomNote"></div></div>
+    <div class="view" id="v-mini"><h3><span>미니미 꾸미기</span><small>ふくや에서 산 옷을 입혀요</small></h3><div class="wear"><canvas id="styleCv" width="44" height="52"></canvas><div class="wlist" id="wlist"></div></div></div>
+    <div class="view" id="v-guest"></div>
+    <div class="toast" id="toast"></div>
+    <div class="end" id="end"></div>
+    <div class="range" id="range"><div class="card"><h4>♡ 내 시험 범위로 마을 만들기</h4><p>이번 시험에 나오는 과만 골라 주세요.<br>고른 과만 마을 미션과 연습 문제로 열려요.</p>
+      <div class="book">교재 · 초급 상권 (1~15과)</div>
+      <div class="sel"><select id="rFrom"></select> 부터 <select id="rTo"></select> 까지</div>
+      <div class="cnt" id="rCnt"></div><button class="bigbtn" id="rGo">이 범위로 시작하기</button></div></div>
+    <div class="pad" id="pad"><button class="u" data-d="up">▲</button><button class="d" data-d="down">▼</button><button class="lf" data-d="left">◀</button><button class="rt" data-d="right">▶</button></div>
+    <button class="abtn" id="abtn">말</button>
+  </div>
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-v="home">홈<small>마을 산책</small></button>
+    <button class="tab" data-v="diary">다이어리<small>과별 미션</small></button>
+    <button class="tab" data-v="photo">사진첩<small>문장 도감</small></button>
+    <button class="tab" data-v="room">미니룸<small>내 방</small></button>
+    <button class="tab" data-v="mini">미니미<small>꾸미기</small></button>
+    <button class="tab" data-v="guest">방명록<small>오답 노트</small></button>
+    <button class="tab" id="tabRange">시험 범위<small>바꾸기</small></button>
+  </div>
+  <div class="bgm" id="bgm">♪ BGM<b id="bgmName"></b><div class="ctl"><button id="bgmPrev">◀</button><button id="bgmPlay">▶</button><button id="bgmNext">▶▶</button></div></div>
+</div>
+<script>
+// 나의 일본어 홈피 · 초급 교재 1~15과 학습 항목을 마을 미션과 연습 문제로
+// 대사 · 문제는 과별 문법 항목에 맞춰 새로 쓴 문장 (교재 본문을 옮기지 않음)
+const T = 24, COLS = 28, ROWS = 18, WW = COLS * T, WH = ROWS * T, SC = 2, VW = 620 / SC, VH = 560 / SC;
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+const buf = document.createElement('canvas'); buf.width = VW; buf.height = VH; const g = buf.getContext('2d');
+const $ = id => document.getElementById(id);
+let trL = s => s;
+function fit() { const s = Math.min(window.innerWidth / 984, window.innerHeight / 696); $('stage').style.transform = `translate(-50%, -50%) scale(${s})`; }
+window.addEventListener('resize', fit); fit();
+function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const R = (c, x, y, w, h, col) => { c.fillStyle = col; c.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); };
+
+// ───── 마을 지도 (타일 단위) ─────
+const PATHS = [[0, 4, COLS, 1], [0, 13, COLS, 1], [9, 4, 2, 10], [19, 4, 2, 10]];
+const BUILDINGS = [
+  { x: 1, y: 1, w: 3, h: 3, wall: '#fff3e0', roof: '#ff9f6b', sign: 'いえ' },
+  { x: 5, y: 1, w: 4, h: 3, wall: '#fff0f4', roof: '#ff8fb0', sign: 'カフェ', deco: 'awning' },
+  { x: 11, y: 1, w: 4, h: 3, wall: '#f4fbff', roof: '#6cc0ee', sign: 'コンビニ', deco: 'stripe' },
+  { x: 16, y: 1, w: 3, h: 3, wall: '#f7f0ff', roof: '#b493e8', sign: 'ふくや' },
+  { x: 22, y: 1, w: 5, h: 3, wall: '#f5f8ec', roof: '#8cc46a', sign: 'としょかん' },
+  { x: 1, y: 10, w: 4, h: 3, wall: '#fff1e6', roof: '#ee6b5c', sign: 'ラーメン', deco: 'noren' },
+  { x: 5.6, y: 10, w: 3.2, h: 3, wall: '#effaf5', roof: '#5cc8a0', sign: 'ざっかや' },
+  { x: 11, y: 10, w: 6, h: 3, wall: '#eef3ff', roof: '#7d95d8', sign: 'えき', deco: 'clock' },
+  { x: 22, y: 10, w: 4, h: 3, wall: '#fff8e6', roof: '#f2b84b', sign: 'アパート', deco: 'boxes' },
+];
+const TREES = [];
+for (let x = 0.4; x < COLS; x += 1.55) TREES.push([x, 0.35]);
+for (let x = 0.3; x < COLS; x += 1.8) TREES.push([x + 0.3, 17.3]);
+[[20.6, 1.4], [27.4, 2.6], [0.4, 7.6], [8.2, 6.0], [11.3, 9.0], [18.2, 9.2], [22.4, 6.4], [25.6, 8.6], [27.4, 6.0], [27.3, 11.4],
+ [3.0, 15.6], [8.0, 15.4], [14.5, 15.6], [23.5, 15.5], [18.8, 15.9]].forEach(t => TREES.push(t));
+const POND = { cx: 4.4, cy: 7.3, rx: 2.5, ry: 1.1 };
+const BENCH = { x: 12.0, y: 7.4, w: 1.8, h: 0.6 };
+const POSTER = { x: 15.6, y: 5.6, w: 1.6, h: 1.0 };
+const VENDING = [[20.9, 11.9], [17.4, 11.9], [26.4, 3.0]];
+
+// ───── 주민 · 미니미 ─────
+const NPCS = [
+  { id: 'hana', name: '하나 · 동네 안내원', x: 4.4, y: 4.6, coat: '#ffb36b', hair: '#d9d4cc', hs: 'bob', accs: ['scarf'] },
+  { id: 'mio', name: '미오 · 카페 점장', x: 8.4, y: 4.6, coat: '#ffd6e2', hair: '#5a3a2e', hs: 'bob', accs: ['apron'] },
+  { id: 'yui', name: '유이 · 옷가게 사장', x: 20.4, y: 4.6, coat: '#c4a6f0', hair: '#2a2230', hs: 'long', accs: [] },
+  { id: 'aoi', name: '아오이 · 도서관 사서', x: 22.9, y: 4.6, coat: '#9fd28a', hair: '#3a2a26', hs: 'short', accs: ['glasses'] },
+  { id: 'kenta', name: '켄타 · 이웃', x: 14.3, y: 7.9, coat: '#7fb8f0', hair: '#2a2230', hs: 'short', accs: [] },
+  { id: 'kai', name: '카이 · 잡화점 ざっかや', x: 8.5, y: 13.6, coat: '#7fd6b4', hair: '#3a2a26', hs: 'short', accs: ['apron'] },
+  { id: 'dai', name: '다이스케 · 라멘집 사장', x: 4.9, y: 13.6, coat: '#ffffff', hair: '#2a2230', hs: 'short', accs: ['towel'] },
+  { id: 'sato', name: '사토 · 역무원', x: 12.3, y: 13.6, coat: '#4a5d96', hair: '#2a2230', hs: 'short', accs: ['cap'] },
+  { id: 'ren', name: '렌 · 이사하는 이웃', x: 26.6, y: 13.6, coat: '#ff8f7a', hair: '#6a4430', hs: 'short', accs: [] },
+];
+const IDLE = {
+  hana: ['がんばって！', '감밧테!', '힘내요!'], mio: ['いらっしゃい！', '이랏샤이!', '어서 와요!'], yui: ['また どうぞ。', '마타 도-조.', '또 오세요.'],
+  aoi: ['しずかに ね。', '시즈카니 네.', '조용히 부탁해요.'], kenta: ['いい てんき だね。', '이- 텐키 다네.', '날씨 좋다.'], kai: ['いらっしゃい。', '이랏샤이.', '어서 와요.'],
+  dai: ['へい、 らっしゃい！', '헤이, 랏샤이!', '어서 와!'], sato: ['でんしゃが きますよ。', '덴샤가 키마스요.', '전철이 와요.'], ren: ['にもつが おおい…', '니모츠가 오-이…', '짐이 많아…'],
+};
+// 미니미 도트 (12 × 16) · h 머리 s 피부 e 눈 b 볼 c 옷 p 바지 f 신발
+const BASE = ['...hhhhhh...', '..hhhhhhhh..', '.hhhhhhhhhh.', '.hhsssssshh.', '.hssssssssh.', '.ssessssess.', '.sbssssssbs.', '..ssssssss..', '...ssssss...', '..cccccccc..', '.sccccccccs.', '.sccccccccs.', '..cccccccc..', '...pp..pp...', '...pp..pp...', '..ff....ff..'];
+function minimiRows(look, dir, frame) {
+  const rows = BASE.map(r => r.split(''));
+  const set = (r, c, v) => { if (rows[r] && rows[r][c] !== undefined) rows[r][c] = v; };
+  if (look.hs === 'bob') { for (let r = 4; r <= 8; r++) { set(r, 1, 'h'); set(r, 10, 'h'); } set(8, 2, 'h'); set(8, 9, 'h'); }
+  if (look.hs === 'long') for (let r = 4; r <= 11; r++) { set(r, 1, 'h'); set(r, 10, 'h'); }
+  if (dir === 'up') for (let r = 3; r <= 7; r++) for (let c = 2; c <= 9; c++) set(r, c, 'h');
+  const a = look.accs || [];
+  if (a.includes('glasses') && dir !== 'up') { [2, 4, 7, 9].forEach(c => set(5, c, 'g')); }
+  if (a.includes('apron')) for (let r = 10; r <= 12; r++) for (let c = 3; c <= 8; c++) set(r, c, 'a');
+  if (a.includes('scarf')) for (let c = 2; c <= 9; c++) set(9, c, 'q');
+  if (a.includes('muffler')) { for (let c = 2; c <= 9; c++) set(9, c, 'm'); set(10, 8, 'm'); set(11, 8, 'm'); }
+  if (a.includes('beanie')) { for (let r = 0; r <= 1; r++) for (let c = 0; c < 12; c++) if (rows[r][c] === 'h') set(r, c, 'k'); for (let c = 1; c <= 10; c++) set(2, c, 'K'); }
+  if (a.includes('cap')) { for (let r = 0; r <= 2; r++) for (let c = 0; c < 12; c++) if (rows[r][c] === 'h') set(r, c, 'n'); for (let c = 1; c <= 10; c++) set(3, c, 'n'); set(1, 5, 'y'); set(1, 6, 'y'); }
+  if (a.includes('towel')) for (let c = 1; c <= 10; c++) set(2, c, 'w');
+  if (frame) { rows[13] = '...pp...pp..'.split(''); rows[14] = '..pp....pp..'.split(''); rows[15] = '..ff.....ff.'.split(''); }
+  return rows;
+}
+function drawMinimi(c, look, x, y, s, dir, frame) {
+  const pal = { h: look.hair, s: '#ffe0c8', e: '#33283a', b: '#ffa9bd', c: look.coat, p: '#56607e', f: '#4a3a3a', g: '#33283a', a: '#8a5a3a', q: '#ff7fa8', m: '#ffbf4d', k: '#e9a93c', K: '#c9861f', n: '#2f3e66', y: '#ffd24d', w: '#ffffff' };
+  const rows = minimiRows(look, dir, frame);
+  rows.forEach((r, j) => r.forEach((ch, i) => { if (ch !== '.') R(c, x + i * s, y + j * s, s, s, pal[ch]); }));
+  // 테두리 대신 아래 그림자
+  c.fillStyle = 'rgba(60,80,60,0.25)'; c.fillRect(Math.round(x + 2 * s), Math.round(y + 16 * s), 8 * s, s);
+}
+
+// ───── 상점 물건 ─────
+const PRICE_RD = { 300: 'さんびゃく えん', 400: 'よんひゃく えん', 500: 'ごひゃく えん', 600: 'ろっぴゃく えん', 700: 'ななひゃく えん', 800: 'はっぴゃく えん', 900: 'きゅうひゃく えん' };
+const ITEMS = {
+  navy: { shop: 'yui', kind: 'coat', jp: 'ネイビーの コート', rd: '네이비-노 코-토', ko: '남색 코트', price: 800, color: '#3e5a96' },
+  red: { shop: 'yui', kind: 'coat', jp: 'あかい コート', rd: '아카이 코-토', ko: '빨간 코트', price: 800, color: '#e8554e' },
+  beanie: { shop: 'yui', kind: 'acc', jp: 'ぼうし', rd: '보-시', ko: '모자', price: 600 },
+  muffler: { shop: 'yui', kind: 'acc', jp: 'マフラー', rd: '마후라-', ko: '머플러', price: 500 },
+  glasses: { shop: 'yui', kind: 'acc', jp: 'めがね', rd: '메가네', ko: '안경', price: 700 },
+  lamp: { shop: 'kai', kind: 'room', jp: 'ランプ', rd: '람푸', ko: '램프', price: 600 },
+  flower: { shop: 'kai', kind: 'room', jp: 'はな', rd: '하나', ko: '꽃', price: 300 },
+  poster: { shop: 'kai', kind: 'room', jp: 'ポスター', rd: '포스타-', ko: '포스터', price: 400 },
+  rug: { shop: 'kai', kind: 'room', jp: 'ラグ', rd: '라구', ko: '러그', price: 700 },
+  cushion: { shop: 'kai', kind: 'room', jp: 'クッション', rd: '쿳숀', ko: '쿠션', price: 500 },
+  record: { shop: 'kai', kind: 'room', jp: 'レコード', rd: '레코-도', ko: '레코드', price: 900 },
+  cd2: { shop: 'kai', kind: 'bgm', jp: 'ゆうやけの シーディー', rd: '유-야케노 시-디-', ko: 'BGM CD «노을 팝»', price: 600, track: 't2' },
+  cd3: { shop: 'kai', kind: 'bgm', jp: 'えきの シーディー', rd: '에키노 시-디-', ko: 'BGM CD «역 앞 피코피코»', price: 800, track: 't3' },
+};
+const ROOM_ITEMS = Object.keys(ITEMS).filter(k => ITEMS[k].kind === 'room');
+
+// ───── 과별 미션 + 연습 문제 ─────
+// say: [일본어, 읽기, 뜻] · choose: { ask, opts } · drill: [묻는 말, [보기 3개]] (보기 = O(일본어, 읽기, 설명, 정답))
+const O = (jp, rd, ko, ok) => ({ jp, rd, ko, ok });
+const MISSIONS = [
+  { id: 'u1', unit: '1·2과', npc: 'hana', where: '집 앞', text: '하나와 히라가나 · 가타카나 간판 읽기', yen: 100,
+    learn: { kana: ['えき · カフェ · コンビニ', '에키 · 카페 · 콘비니', '역 · 카페 · 편의점 (간판 읽기)'] },
+    steps: [
+      { say: ['ようこそ！ かんばんを よんで みて。', '요-코소! 칸반오 욘데 미테.', '어서 와요! 간판을 읽어 봐요.'] },
+      { choose: { ask: '<span class="big jp">えき</span> 는 어떻게 읽을까요?', opts: [O('에코', '', 'え=에, き=키'), O('에키', '역', 'えき = 역', true), O('아키', '', 'あ가 아니라 え')] } },
+      { choose: { ask: '<span class="big jp">カフェ</span> 는?', opts: [O('카레', '', 'カレー가 카레'), O('케이크', '', 'ケーキ가 케이크'), O('카페', 'café', 'カフェ = 카페', true)] } },
+    ],
+    drill: [
+      ['<span class="big jp">コンビニ</span> 는?', [O('콘비니', '편의점', 'コンビニ = 편의점', true), O('곤비니', '', 'コ는 «코», ゴ가 «고»'), O('콘피니', '', 'ビ는 «비», ピ가 «피»')]],
+      ['<span class="big jp">ラーメン</span> 은?', [O('나-멘', '', 'ナ가 «나», ラ는 «라»'), O('라-멘', '라멘', 'ラーメン = 라멘', true), O('라-몬', '', 'メ는 «메»')]],
+      ['<span class="big jp">いえ</span> 는?', [O('이오', '', 'お가 «오», え는 «에»'), O('우에', '', 'う가 «우», い는 «이»'), O('이에', '집', 'いえ = 집', true)]],
+    ] },
+  { id: 'u3', unit: '3과', npc: 'kenta', where: '공원', text: '이웃 켄타에게 자기소개하기', yen: 100,
+    learn: { hajime: ['はじめまして。 どうぞ よろしく。', '하지메마시테. 도-조 요로시쿠.', '처음 뵙겠습니다. 잘 부탁해요.'], janai: ['かいしゃいん じゃ ありません。', '카이샤인 쟈 아리마셍.', '회사원이 아닙니다.'] },
+    steps: [
+      { say: ['はじめまして。 ケンタ です。', '하지메마시테. 켄타 데스.', '처음 뵙겠습니다. 켄타입니다.'] },
+      { choose: { ask: '자기소개로 대답해 보세요', opts: [O('おやすみなさい。 わたしは がくせい です。', '오야스미나사이. 와타시와 가쿠세- 데스.', '처음 만났을 땐 はじめまして'), O('はじめまして。 わたしは がくせい です。', '하지메마시테. 와타시와 가쿠세- 데스.', '처음 뵙겠습니다. 저는 학생입니다.', true), O('さようなら。 わたしは がくせい です。', '사요-나라. 와타시와 가쿠세- 데스.', 'さようなら는 헤어질 때')] } },
+      { say: ['かいしゃいん ですか？', '카이샤인 데스카?', '회사원이에요?'] },
+      { choose: { ask: '«아니요, 학생이에요»', opts: [O('はい、 かいしゃいん じゃ ありません。', '하이, 카이샤인 쟈 아리마셍.', 'はい와 じゃありません이 안 맞아요'), O('いいえ、 かいしゃいん です。', '이-에, 카이샤인 데스.', '앞뒤가 안 맞아요'), O('いいえ、 かいしゃいん じゃ ありません。 がくせい です。', '이-에, 카이샤인 쟈 아리마셍. 가쿠세- 데스.', '아니요, 회사원이 아닙니다. 학생입니다.', true)] } },
+    ],
+    drill: [
+      ['«저는 학생입니다»', [O('わたしを がくせい です。', '와타시오 가쿠세- 데스.', '«~은/는»은 を가 아니라 は'), O('わたしは がくせい です。', '와타시와 가쿠세- 데스.', '저는 학생입니다.', true), O('わたしは がくせい じゃ です。', '와타시와 가쿠세- 쟈 데스.', 'じゃ 뒤에는 ありません')]],
+      ['«선생님이 아닙니다»', [O('せんせい じゃ ありません。', '센세- 쟈 아리마셍.', '선생님이 아닙니다.', true), O('せんせいが ありません。', '센세-가 아리마셍.', '«아니다»는 じゃ ありません'), O('せんせい です じゃ。', '센세- 데스 쟈.', '순서가 틀렸어요')]],
+      ['<span class="big jp">どうぞ よろしく おねがいします</span> 의 뜻은?', [O('안녕히 가세요', '', 'さようなら의 뜻'), O('감사합니다', '', 'ありがとう의 뜻'), O('잘 부탁드립니다', '', '처음 인사 끝에 붙이는 말', true)]],
+    ] },
+  { id: 'u4', unit: '4과', npc: 'sato', where: '역 · 아래 길', text: '역 분실물 스마트폰 주인 찾기', yen: 300,
+    learn: { dareno: ['この スマホは だれの ですか？', '코노 스마호와 다레노 데스카?', '이 스마트폰은 누구 거예요?'], soreno: ['それは ケンタさんの です。', '소레와 켄타산노 데스.', '그건 켄타 씨 거예요.'] },
+    steps: [
+      { say: ['おとしもの です。 この スマホは だれの ですか？', '오토시모노 데스. 코노 스마호와 다레노 데스카?', '분실물이에요. 이 스마트폰은 누구 거예요? (케이스에 «KENTA»)'] },
+      { choose: { ask: '케이스에 «KENTA». 누구 것인지 말해 보세요', opts: [O('これは ケンタさん です。', '코레와 켄타상 데스.', 'の가 빠지면 «이건 켄타 씨예요»'), O('それは ケンタさんの です。', '소레와 켄타산노 데스.', '그건 켄타 씨 거예요.', true), O('あれは わたしの です。', '아레와 와타시노 데스.', '거짓말은 안 돼요')] } },
+    ],
+    drill: [
+      ['«이건 제 가방이에요»', [O('これは わたし かばん です。', '코레와 와타시 카방 데스.', '«제 ~»는 わたしの'), O('これは わたしの かばん です。', '코레와 와타시노 카방 데스.', '이건 제 가방이에요.', true), O('これの わたしは かばん です。', '코레노 와타시와 카방 데스.', '순서가 틀렸어요')]],
+      ['상대방 가까이에 있는 물건을 가리킬 때는?', [O('これ', '코레', '내 가까이에 있을 때'), O('あれ', '아레', '둘 다에게서 멀 때'), O('それ', '소레', '상대 가까이 = それ', true)]],
+      ['«누구 거예요?»', [O('だれの ですか？', '다레노 데스카?', '누구 거예요?', true), O('なんの ですか？', '난노 데스카?', '무슨 거예요?'), O('どこの ですか？', '도코노 데스카?', '어디 거예요?')]],
+    ] },
+  { id: 'u5', unit: '5과', npc: 'sato', where: '역', text: '역에서 지금 몇 시인지 말하기', yen: 100,
+    learn: { nanji: ['いま なんじ ですか？', '이마 난지 데스카?', '지금 몇 시예요?'], han: ['にじはん です。', '니지항 데스.', '2시 반이에요.'] },
+    steps: [
+      { say: ['でんしゃは さんじ です。 いま なんじ ですか？', '덴샤와 산지 데스. 이마 난지 데스카?', '전철은 3시예요. 지금 몇 시예요?'] },
+      { choose: { ask: '역 시계는 2:30', opts: [O('さんじはん です。', '산지항 데스.', '3시 반'), O('にじはん です。', '니지항 데스.', '2시 반이에요.', true), O('にじ です。', '니지 데스.', 'はん = 반')] } },
+    ],
+    drill: [
+      ['4시는?', [O('よんじ', '욘지', '4시는 よじ (불규칙)'), O('よじ', '요지', '4시 = よじ', true), O('しじ', '시지', '4시는 よじ')]],
+      ['9시는?', [O('くじ', '쿠지', '9시 = くじ', true), O('きゅうじ', '큐-지', '9시는 くじ (불규칙)'), O('くうじ', '쿠-지', '9시는 くじ')]],
+      ['10분은?', [O('じゅうふん', '쥬-훙', '10분은 じゅっぷん'), O('とおふん', '토-훙', '10분은 じゅっぷん'), O('じゅっぷん', '쥿풍', '10분 = じゅっぷん', true)]],
+    ] },
+  { id: 'u6', unit: '6과', npc: 'kenta', where: '공원', text: '켄타의 생일 날짜 알아내기', yen: 200,
+    learn: { itsu: ['たんじょうびは いつ ですか？', '탄죠-비와 이츠 데스카?', '생일은 언제예요?'], youka: ['しがつ ようか です。', '시가츠 요-카 데스.', '4월 8일이에요.'] },
+    steps: [
+      { say: ['らいしゅう、 わたしの たんじょうび です！', '라이슈-, 와타시노 탄죠-비 데스!', '다음 주가 제 생일이에요!'] },
+      { choose: { ask: '생일이 언제인지 물어보세요', opts: [O('たんじょうびは なんじ ですか？', '탄죠-비와 난지 데스카?', '날짜는 いつ'), O('たんじょうびは だれ ですか？', '탄죠-비와 다레 데스카?', '생일은 누구예요…?'), O('たんじょうびは いつ ですか？', '탄죠-비와 이츠 데스카?', '생일은 언제예요?', true)] } },
+      { say: ['しがつ ようか です。', '시가츠 요-카 데스.', '(뜻 보기를 누르지 말고 맞혀 보세요)'] },
+      { choose: { ask: '케이크를 언제 가져갈까요?', opts: [O('4월 8일', '', 'しがつ = 4월, ようか = 8일', true), O('4월 4일', '', '4일은 よっか'), O('8월 4일', '', '8월은 はちがつ')] } },
+    ],
+    drill: [
+      ['1일은?', [O('いちにち', '이치니치', '«하루»라는 뜻. 날짜 1일은 ついたち'), O('ついたち', '츠이타치', '1일 = ついたち', true), O('いっか', '익카', '1일은 ついたち')]],
+      ['20일은?', [O('はつか', '하츠카', '20일 = はつか', true), O('にじゅうにち', '니쥬-니치', '20일은 はつか (불규칙)'), O('はちか', '하치카', '20일은 はつか')]],
+      ['9월은?', [O('きゅうがつ', '큐-가츠', '9월은 くがつ'), O('ここのがつ', '코코노가츠', '9월은 くがつ'), O('くがつ', '쿠가츠', '9월 = くがつ', true)]],
+    ] },
+  { id: 'u7', unit: '7과', npc: 'mio', where: '카페', text: '카페 새 케이크 칭찬하기 (시식 알바)', yen: 400,
+    learn: { oishii: ['おいしい ですね！', '오이시- 데스네!', '맛있네요!'], suteki: ['とても すてき ですね。', '토테모 스테키 데스네.', '정말 멋지네요.'] },
+    steps: [
+      { say: ['あたらしい ケーキ です。 どうぞ！', '아타라시- 케-키 데스. 도-조!', '새 케이크예요. 드세요!'] },
+      { choose: { ask: '맛을 칭찬해 보세요', opts: [O('たかい ですね。', '타카이 데스네.', '비싸네요…'), O('おいしい ですね！', '오이시- 데스네!', '맛있네요!', true), O('さむい ですね。', '사무이 데스네.', '춥네요…')] } },
+      { say: ['うれしい！ この カフェは どう ですか？', '우레시-! 코노 카페와 도- 데스카?', '기뻐요! 이 카페는 어때요?'] },
+      { choose: { ask: '카페가 멋지다고 말해 보세요', opts: [O('とても すてきい ですね。', '토테모 스테키- 데스네.', 'すてき는 な형용사라 い를 붙이지 않아요'), O('すこし きたない ですね。', '스코시 키타나이 데스네.', '조금 더럽네요… 실례!'), O('とても すてき ですね。', '토테모 스테키 데스네.', '정말 멋지네요.', true)] } },
+    ],
+    drill: [
+      ['«이 라멘은 맛있지 않아요»', [O('おいしい じゃ ないです。', '오이시- 쟈 나이데스.', 'い형용사의 부정은 ~くないです'), O('おいしく ないです。', '오이시쿠 나이데스.', '맛있지 않아요.', true), O('おいしく じゃ ないです。', '오이시쿠 쟈 나이데스.', 'じゃ는 필요 없어요')]],
+      ['«조용한 카페»', [O('しずかな カフェ', '시즈카나 카훼', '조용한 카페 (な형용사 + な)', true), O('しずかい カフェ', '시즈카이 카훼', 'しずか는 な형용사'), O('しずか カフェ', '시즈카 카훼', '명사 앞에는 な가 필요해요')]],
+      ['«방이 넓어요»', [O('へやが ひろだ です。', '헤야가 히로다 데스.', 'ひろい는 い형용사'), O('へやが ひろいだ です。', '헤야가 히로이다 데스.', 'い형용사 뒤에 だ는 안 붙어요'), O('へやが ひろい です。', '헤야가 히로이 데스.', '방이 넓어요.', true)]],
+    ] },
+  { id: 'u8', unit: '8과', npc: 'mio', where: '카페', text: '미오 점장과 좋아하는 사람 이야기', yen: 100,
+    learn: { donna: ['どんな ひとが すき ですか？', '돈나 히토가 스키 데스카?', '어떤 사람을 좋아해요?'], yasashii: ['やさしい ひとが すき です。', '야사시- 히토가 스키 데스.', '다정한 사람이 좋아요.'] },
+    steps: [
+      { say: ['どんな ひとが すき ですか？', '돈나 히토가 스키 데스카?', '어떤 사람을 좋아해요?'] },
+      { choose: { ask: '«다정한 사람이 좋아요» · 문법이 맞는 것은?', opts: [O('やさしいな ひとが すき です。', '야사시-나 히토가 스키 데스.', 'い형용사 뒤에는 な가 없어요'), O('やさしい ひとを すき です。', '야사시- 히토오 스키 데스.', 'すき 앞에는 が'), O('やさしい ひとが すき です。', '야사시- 히토가 스키 데스.', '다정한 사람이 좋아요.', true)] } },
+    ],
+    drill: [
+      ['«좋아하는 음식은 뭐예요?»', [O('すきい たべものは なん ですか？', '스키- 타베모노와 난 데스카?', 'すき는 な형용사'), O('すきな たべものは なん ですか？', '스키나 타베모노와 난 데스카?', '좋아하는 음식은 뭐예요?', true), O('すきの たべものは なん ですか？', '스키노 타베모노와 난 데스카?', '명사 앞은 すきな')]],
+      ['«노래를 잘해요»', [O('うたが じょうず です。', '우타가 죠-즈 데스.', '노래를 잘해요. (じょうず 앞은 が)', true), O('うたを じょうず です。', '우타오 죠-즈 데스.', 'じょうず 앞에는 が'), O('うたが じょうずい です。', '우타가 죠-즈이 데스.', 'じょうず는 な형용사')]],
+      ['«고기를 싫어해요»', [O('にくを きらい です。', '니쿠오 키라이 데스.', 'きらい 앞에는 が'), O('にくが きらくない です。', '니쿠가 키라쿠나이 데스.', 'きらい는 な형용사라 くない가 아니에요'), O('にくが きらい です。', '니쿠가 키라이 데스.', '고기를 싫어해요.', true)]],
+    ] },
+  { id: 'u9', unit: '9과', npc: 'dai', where: '라멘집 · 아래 길', text: '«이 동네에서 제일 맛있는 가게» 말하기', yen: 200,
+    learn: { ichiban: ['ラーメンやが いちばん おいしい です。', '라-멘야가 이치방 오이시- 데스.', '라멘집이 제일 맛있어요.'], hou: ['ラーメンより すしの ほうが すき です。', '라-멘요리 스시노 호-가 스키 데스.', '라멘보다 초밥을 더 좋아해요.'] },
+    steps: [
+      { say: ['この まちで いちばん おいしい みせは どこ ですか？', '코노 마치데 이치방 오이시- 미세와 도코 데스카?', '이 동네에서 제일 맛있는 가게는 어디예요?'] },
+      { choose: { ask: '라멘집이 제일 맛있다고 말해 보세요', opts: [O('ラーメンやが いちばん おいしい です！', '라-멘야가 이치방 오이시- 데스!', '라멘집이 제일 맛있어요!', true), O('ラーメンやが いちばん おいしいな です。', '라-멘야가 이치방 오이시-나 데스.', 'おいしい 뒤에 な는 필요 없어요'), O('ラーメンやは いちばん じゃ ありません。', '라-멘야와 이치방 쟈 아리마셍.', '사장님이 슬퍼해요')] } },
+    ],
+    drill: [
+      ['«라멘보다 초밥을 더 좋아해요»', [O('ラーメンから すしが すき です。', '라-멘카라 스시가 스키 데스.', '«~보다»는 より'), O('ラーメンより すしの ほうが すき です。', '라-멘요리 스시노 호-가 스키 데스.', '라멘보다 초밥을 더 좋아해요.', true), O('ラーメンまで すしが すき です。', '라-멘마데 스시가 스키 데스.', 'まで는 «~까지»')]],
+      ['«커피와 홍차 중 어느 쪽이 좋아요?»', [O('コーヒーと こうちゃと どちらが いい ですか？', '코-히-토 코-챠토 도치라가 이- 데스카?', '둘 중 어느 쪽 = どちら', true), O('コーヒーと こうちゃと だれが いい ですか？', '코-히-토 코-챠토 다레가 이- 데스카?', 'だれ는 «누구»'), O('コーヒーと こうちゃと いつが いい ですか？', '코-히-토 코-챠토 이츠가 이- 데스카?', 'いつ는 «언제»')]],
+      ['«반에서 누가 제일 키가 커요?»', [O('クラスで なにが いちばん せが たかい ですか？', '쿠라스데 나니가 이치방 세가 타카이 데스카?', '사람은 なに가 아니라 だれ'), O('クラスに だれが いちばん せが たかい ですか？', '쿠라스니 다레가 이치방 세가 타카이 데스카?', '범위는 に가 아니라 で'), O('クラスで だれが いちばん せが たかい ですか？', '쿠라스데 다레가 이치방 세가 타카이 데스카?', '반에서 누가 제일 키가 커요?', true)]],
+    ] },
+  { id: 'u10', unit: '10과', npc: 'yui', where: '옷가게 ふくや', text: '옷가게에서 블라우스 사기 (¥1,500)', yen: 0,
+    learn: { ikura: ['この ブラウスは いくら ですか？', '코노 부라우스와 이쿠라 데스카?', '이 블라우스는 얼마예요?'], sengo: ['せんごひゃく えん です。', '센고햐쿠 엔 데스.', '1,500엔입니다.'] },
+    steps: [
+      { say: ['いらっしゃいませ。', '이랏샤이마세.', '어서 오세요.'] },
+      { choose: { ask: '블라우스 값을 물어보세요', opts: [O('この ブラウスは なんじ ですか？', '코노 부라우스와 난지 데스카?', '몇 시예요…?'), O('この ブラウスは いくら ですか？', '코노 부라우스와 이쿠라 데스카?', '이 블라우스는 얼마예요?', true), O('その ブラウスは だれの ですか？', '소노 부라우스와 다레노 데스카?', '누구 거예요?')] } },
+      { say: ['せんごひゃく えん です。', '센고햐쿠 엔 데스.', '(얼마인지 맞혀 보세요)'] },
+      { choose: { ask: '지갑에서 얼마를 낼까요?', opts: [O('¥5,100', '', 'ごせんひゃく'), O('¥150', '', 'ひゃくごじゅう'), O('¥1,500', '', 'せん + ごひゃく', true)] } },
+      { say: ['ありがとう ございます。 よく にあいますね！', '아리가토- 고자이마스. 요쿠 니아이마스네!', '감사합니다. 잘 어울리네요!'], pay: 1500 },
+    ],
+    drill: [
+      ['300엔은?', [O('さんびゃく えん', '삼뱌쿠 엔', '300 = さんびゃく (ひ → び)', true), O('さんひゃく えん', '상햐쿠 엔', '3 뒤에서는 びゃく'), O('さんぴゃく えん', '삼퍄쿠 엔', 'ぴゃく는 600 · 800')]],
+      ['600엔은?', [O('ろくひゃく えん', '로쿠햐쿠 엔', '600은 ろっぴゃく'), O('ろっぴゃく えん', '롭퍄쿠 엔', '600 = ろっぴゃく', true), O('ろくぴゃく えん', '로쿠퍄쿠 엔', '작은 っ가 들어가요')]],
+      ['3,000엔은?', [O('さんせん えん', '산센 엔', '3,000은 さんぜん'), O('みっせん えん', '밋센 엔', '3,000은 さんぜん'), O('さんぜん えん', '산젠 엔', '3,000 = さんぜん', true)]],
+    ] },
+  { id: 'u11', unit: '11과', npc: 'hana', where: '집 앞', text: '하나와 «います · あります» 구분하기', yen: 100,
+    learn: { imasu: ['したしい ともだちが います。', '시타시- 토모다치가 이마스.', '친한 친구가 있어요. (사람 · 동물 = います)'], arimasu: ['こうえんに ベンチが あります。', '코-엔니 벤치가 아리마스.', '공원에 벤치가 있어요. (물건 = あります)'] },
+    steps: [
+      { say: ['この まちに したしい ともだちが いますか？', '코노 마치니 시타시- 토모다치가 이마스카?', '이 동네에 친한 친구가 있어요?'] },
+      { choose: { ask: '«네, 있어요. 켄타 씨예요»', opts: [O('はい、 あります。 ケンタさん です。', '하이, 아리마스. 켄타상 데스.', '사람에게는 います'), O('はい、 います。 ケンタさん です。', '하이, 이마스. 켄타상 데스.', '네, 있어요. 켄타 씨예요.', true), O('いいえ、 いません。 ケンタさん です。', '이-에, 이마셍. 켄타상 데스.', '앞뒤가 안 맞아요')] } },
+    ],
+    drill: [
+      ['«책상 위에 책이 있어요»', [O('つくえの うえに ほんが います。', '츠쿠에노 우에니 홍가 이마스.', '물건은 あります'), O('つくえの うえで ほんが あります。', '츠쿠에노 우에데 홍가 아리마스.', '있는 장소는 で가 아니라 に'), O('つくえの うえに ほんが あります。', '츠쿠에노 우에니 홍가 아리마스.', '책상 위에 책이 있어요.', true)]],
+      ['«방에 고양이가 있어요»', [O('へやに ねこが います。', '헤야니 네코가 이마스.', '동물 = います', true), O('へやに ねこが あります。', '헤야니 네코가 아리마스.', '동물에는 います'), O('へやを ねこが います。', '헤야오 네코가 이마스.', '장소는 に')]],
+      ['<span class="big jp">きょうだいが いますか</span> 의 뜻은?', [O('형제를 좋아해요?', '', 'すき가 없어요'), O('형제가 있어요?', '', 'きょうだい = 형제', true), O('형제는 어디예요?', '', 'どこ가 없어요')]],
+    ] },
+  { id: 'u12', unit: '12과', npc: 'aoi', where: '도서관 としょかん', text: '도서관에서 매일 하는 일 말하기', yen: 200,
+    learn: { mainichi: ['まいにち としょかんで べんきょうを します。', '마이니치 토쇼칸데 벵쿄-오 시마스.', '매일 도서관에서 공부를 해요.'], nanjini: ['なんじに おきますか？', '난지니 오키마스카?', '몇 시에 일어나요?'] },
+    steps: [
+      { say: ['まいにち としょかんで べんきょうを しますか？', '마이니치 토쇼칸데 벵쿄-오 시마스카?', '매일 도서관에서 공부를 해요?'] },
+      { choose: { ask: '«네, 매일 도서관에서 공부해요»', opts: [O('はい、 まいにち としょかんに べんきょうを します。', '하이, 마이니치 토쇼칸니 벵쿄-오 시마스.', '하는 장소는 で'), O('はい、 まいにち としょかんで べんきょうを します。', '하이, 마이니치 토쇼칸데 벵쿄-오 시마스.', '네, 매일 도서관에서 공부해요.', true), O('はい、 きのう としょかんで べんきょうを します。', '하이, 키노- 토쇼칸데 벵쿄-오 시마스.', 'きのう는 «어제»')] } },
+    ],
+    drill: [
+      ['«아침에 커피를 마셔요»', [O('あさ コーヒーを のみます。', '아사 코-히-오 노미마스.', '아침에 커피를 마셔요.', true), O('あさ コーヒーを たべます。', '아사 코-히-오 타베마스.', 'たべます는 «먹어요»'), O('あさ コーヒーに のみます。', '아사 코-히-니 노미마스.', '목적어는 を')]],
+      ['«어제 공부하지 않았어요»', [O('きのう べんきょう しないでした。', '키노- 벵쿄- 시나이데시타.', '~ませんでした가 맞아요'), O('きのう べんきょう しませんでした。', '키노- 벵쿄- 시마셍데시타.', '어제 공부하지 않았어요.', true), O('きのう べんきょう しました じゃない。', '키노- 벵쿄- 시마시타 쟈나이.', '이런 형태는 없어요')]],
+      ['«몇 시에 일어나요?»', [O('なんじで おきますか？', '난지데 오키마스카?', '시간에는 に'), O('なんじを おきますか？', '난지오 오키마스카?', '시간에는 に'), O('なんじに おきますか？', '난지니 오키마스카?', '몇 시에 일어나요?', true)]],
+    ] },
+  { id: 'u13', unit: '13과', npc: 'kenta', where: '공원', text: '켄타를 콘서트에 초대하기', yen: 100,
+    learn: { ikimasenka: ['いっしょに コンサートに いきませんか？', '잇쇼니 콘사-토니 이키마셍카?', '같이 콘서트에 가지 않을래요?'], ikimasho: ['いいですね。 いきましょう！', '이- 데스네. 이키마쇼-!', '좋아요. 가요!'] },
+    steps: [
+      { say: ['こうえんで コンサートが ありますよ。', '코-엔데 콘사-토가 아리마스요.', '공원에서 콘서트가 있대요.'] },
+      { choose: { ask: '켄타에게 같이 가자고 권해 보세요', opts: [O('いっしょに コンサートに いきましたか？', '잇쇼니 콘사-토니 이키마시타카?', '갔어요? (과거)'), O('ひとりで コンサートに いきません。', '히토리데 콘사-토니 이키마셍.', '혼자 안 가요…'), O('いっしょに コンサートに いきませんか？', '잇쇼니 콘사-토니 이키마셍카?', '같이 콘서트에 가지 않을래요?', true)] } },
+      { say: ['いいですね！ いきましょう！', '이- 데스네! 이키마쇼-!', '좋아요! 가요!'] },
+    ],
+    drill: [
+      ['«같이 밥 먹어요» (권유)', [O('いっしょに ごはんを たべましょう。', '잇쇼니 고항오 타베마쇼-.', '같이 밥 먹어요.', true), O('いっしょに ごはんを たべましたか。', '잇쇼니 고항오 타베마시타카.', '먹었어요? (과거)'), O('いっしょに ごはんを たべません。', '잇쇼니 고항오 타베마셍.', '안 먹어요')]],
+      ['«주말에 영화 보지 않을래요?»', [O('しゅうまつ えいがを みましたか？', '슈-마츠 에-가오 미마시타카?', '봤어요? (과거)'), O('しゅうまつ えいがを みませんか？', '슈-마츠 에-가오 미마셍카?', '주말에 영화 보지 않을래요?', true), O('しゅうまつ えいがを みますでした。', '슈-마츠 에-가오 미마스데시타.', '이런 형태는 없어요')]],
+      ['<span class="big jp">すみません、 その ひは ちょっと…</span> 의 뜻은?', [O('좋아요, 가요!', '', 'いきましょう의 뜻'), O('그날 만나요', '', '만나자는 말이 아니에요'), O('미안해요, 그날은 좀… (거절)', '', 'ちょっと… = 부드러운 거절', true)]],
+    ] },
+  { id: 'u14', unit: '14과', npc: 'aoi', where: '도서관', text: '사서 아오이에게 내 꿈 말하기', yen: 100,
+    learn: { naritai: ['かいけいしに なりたい です。', '카이케-시니 나리타이 데스.', '회계사가 되고 싶어요.'], ikitai: ['にほんに いきたい です。', '니혼니 이키타이 데스.', '일본에 가고 싶어요.'] },
+    steps: [
+      { say: ['しょうらい、 どんな ひとに なりたい ですか？', '쇼-라이, 돈나 히토니 나리타이 데스카?', '나중에 어떤 사람이 되고 싶어요?'] },
+      { choose: { ask: '«회계사가 되고 싶어요»', opts: [O('かいけいしを なりたい です。', '카이케-시오 나리타이 데스.', 'なる 앞에는 に'), O('かいけいしに なりたい です。', '카이케-시니 나리타이 데스.', '회계사가 되고 싶어요.', true), O('かいけいしに なりたかった です。', '카이케-시니 나리타캇타 데스.', '되고 싶었어요 (과거)')] } },
+      { say: ['すてきな ゆめ ですね！', '스테키나 유메 데스네!', '멋진 꿈이네요!'] },
+    ],
+    drill: [
+      ['«일본에 가고 싶어요»', [O('にほんに いきたい です。', '니혼니 이키타이 데스.', '일본에 가고 싶어요.', true), O('にほんを いきたい です。', '니혼오 이키타이 데스.', '가는 곳은 に'), O('にほんに いきたい でした。', '니혼니 이키타이 데시타.', '과거는 いきたかったです')]],
+      ['«선생님이 되고 싶어요»', [O('せんせいが なりたい です。', '센세-가 나리타이 데스.', 'なる 앞에는 に'), O('せんせいに なりたく です。', '센세-니 나리타쿠 데스.', 'なりたいです가 맞아요'), O('せんせいに なりたい です。', '센세-니 나리타이 데스.', '선생님이 되고 싶어요.', true)]],
+      ['«무엇을 먹고 싶어요?»', [O('なにを たべりたい ですか？', '나니오 타베리타이 데스카?', 'たべます → たべたい'), O('なにを たべたい ですか？', '나니오 타베타이 데스카?', '무엇을 먹고 싶어요?', true), O('なにを たべたい でしたか？', '나니오 타베타이 데시타카?', '이런 형태는 없어요')]],
+    ] },
+  { id: 'u15', unit: '15과', npc: 'ren', where: '아파트 · 아래 길 오른쪽', text: '이사하는 이웃 렌 도와주기', yen: 300,
+    learn: { tetsudatte: ['ちょっと てつだって ください。', '춋토 테츠닷테 쿠다사이.', '좀 도와주세요.'], motte: ['この はこを もって ください。', '코노 하코오 못테 쿠다사이.', '이 상자를 들어 주세요.'] },
+    steps: [
+      { say: ['すみません、 ちょっと てつだって ください。', '스미마셍, 춋토 테츠닷테 쿠다사이.', '(무슨 뜻인지 맞혀 보세요)'] },
+      { choose: { ask: '렌이 뭐라고 했을까요?', opts: [O('좀 기다려 주세요', '', 'まって ください'), O('좀 도와주세요', '', 'てつだって ください = 도와주세요', true), O('좀 가르쳐 주세요', '', 'おしえて ください')] } },
+      { say: ['この はこを もって ください。', '코노 하코오 못테 쿠다사이.', '(이번에도 맞혀 보세요)'] },
+      { choose: { ask: '무엇을 할까요?', opts: [O('문을 연다', '', 'あけて ください'), O('상자를 든다', '', 'もって ください = 들어 주세요', true), O('의자에 앉는다', '', 'すわって ください')] } },
+    ],
+    drill: [
+      ['«창문을 열어 주세요»', [O('まどを あけって ください。', '마도오 아켓테 쿠다사이.', 'あける → あけて'), O('まどを あけて ください。', '마도오 아케테 쿠다사이.', '창문을 열어 주세요.', true), O('まどを あきて ください。', '마도오 아키테 쿠다사이.', 'あける → あけて')]],
+      ['«여기에 이름을 써 주세요»', [O('ここに なまえを かいて ください。', '코코니 나마에오 카이테 쿠다사이.', 'かく → かいて', true), O('ここに なまえを かきて ください。', '코코니 나마에오 카키테 쿠다사이.', 'く로 끝나면 いて'), O('ここに なまえを かって ください。', '코코니 나마에오 캇테 쿠다사이.', 'かって는 «사 주세요»')]],
+      ['«천천히 말해 주세요»', [O('ゆっくり はなって ください。', '육쿠리 하낫테 쿠다사이.', 'す로 끝나면 して'), O('ゆっくり はなしって ください。', '육쿠리 하나싯테 쿠다사이.', 'っ가 필요 없어요'), O('ゆっくり はなして ください。', '육쿠리 하나시테 쿠다사이.', '천천히 말해 주세요.', true)]],
+    ] },
+];
+MISSIONS.forEach(m => m.drill.forEach(([ask, opts], i) => m.steps.push({ choose: { ask: `<span class="q">연습 ${i + 1}/${m.drill.length}</span>${ask}`, opts }, drill: true })));
+MISSIONS.forEach(m => m.steps.push({ say: ['よく できました！', '요쿠 데키마시타!', '참 잘했어요! (과 완료)'] }));
+const QCOUNT = MISSIONS.reduce((a, m) => a + m.steps.filter(s => s.choose).length, 0);
+
+let st = { yen: 500, done: {}, learned: [], wrong: 0, owned: [], look: { coat: null, accs: [] }, alba: 0, solved: 0, guest: [], doneAt: {} };
+let total = 0; try { total = +localStorage.getItem('jp-hompy-total') || 0; } catch (e) {}
+const player = { x: 2.5, y: 5.2, dir: 'down', moving: false, step: 0 };
+let ACTIVE = MISSIONS;
+const curMission = () => ACTIVE.find(m => !st.done[m.id]);
+const allSent = () => ACTIVE.flatMap(m => Object.keys(m.learn).map(k => [k, m]));
+const playerLook = () => ({ coat: st.look.coat ? ITEMS[st.look.coat].color : '#ffe9a8', hair: '#3a2a26', hs: 'bob', accs: st.look.accs });
+
+// ───── 대화 ─────
+let dlg = null;
+function startTalk(npc) {
+  const m = curMission();
+  let steps, unit = '';
+  if (m && m.npc === npc.id) { steps = [...m.steps, { reward: m }]; unit = m.unit; }
+  else if (npc.id === 'yui' || npc.id === 'kai') { steps = [{ say: ['いらっしゃいませ。 なにを さがして いますか？', '이랏샤이마세. 나니오 사가시테 이마스카?', '어서 오세요. 무엇을 찾으세요?'] }, { shop: npc.id }]; unit = 'SHOP'; }
+  else if (npc.id === 'mio' && st.done.u8) { steps = albaSteps(); unit = '복습 알바'; }
+  else { const hint = m ? `지금 미션 · ${m.unit} ${m.text} · ${m.where}` : '모든 미션 완료'; steps = [{ say: [IDLE[npc.id][0], IDLE[npc.id][1], `${IDLE[npc.id][2]}  (${hint})`] }]; }
+  dlg = { npc, steps, i: 0, showKo: false, picked: null, unit };
+  $('dlg').classList.add('on'); $('dUnit').textContent = unit;
+  runStep();
+}
+function runStep() {
+  const s = dlg.steps[dlg.i];
+  if (!s) { endTalk(); return; }
+  if (s.reward) { complete(s.reward); dlg.i++; runStep(); return; }
+  if (s.earn) { st.yen += s.earn; st.alba++; updateHud(); toast(`복습 알바 · + ¥${s.earn}`); dlg.i++; runStep(); return; }
+  if (s.buy) {
+    const it = ITEMS[s.buy];
+    if (st.yen >= it.price) {
+      st.yen -= it.price; st.owned.push(s.buy);
+      if (it.kind === 'coat') st.look.coat = s.buy; else if (it.kind === 'acc') st.look.accs.push(s.buy);
+      updateHud(); toast(`${it.ko} 구입 · − ¥${it.price} · ${it.kind === 'room' ? '미니룸에 놓았어요' : it.kind === 'bgm' ? 'BGM 상자에서 틀 수 있어요' : '미니미가 입었어요'}`); if (it.kind === 'bgm') { bgm.cur = it.track; renderBgm(); }
+      dlg.steps[dlg.i] = { say: ['ありがとう ございます！', '아리가토- 고자이마스!', '감사합니다!'] };
+    } else dlg.steps[dlg.i] = { say: ['すみません、 おかねが たりません。', '스미마셍, 오카네가 타리마셍.', '죄송해요, 돈이 부족해요. (8과 뒤 카페 미오의 복습 알바로 벌 수 있어요)'] };
+  }
+  if (s.pay) { const pay = Math.min(s.pay, st.yen); st.yen -= pay; updateHud(); toast(pay < s.pay ? `− ¥${pay.toLocaleString()} · 돈이 모자라 사장님이 깎아 줬어요` : `− ¥${pay.toLocaleString()}`); }
+  dlg.showKo = false; dlg.picked = null; renderDlg();
+}
+function renderDlg() {
+  const s = dlg.steps[dlg.i];
+  if (s.say) {
+    const [jp, rd, ko] = s.say;
+    $('dName').textContent = '💬 ' + dlg.npc.name;
+    $('dBody').innerHTML = `<div class="line-jp jp">${jp}</div><div class="line-rd">${rd}</div><div class="line-ko">${dlg.showKo ? ko : ''}</div>
+      <div class="tools"><button class="tbtn" id="koBtn">${dlg.showKo ? '뜻 숨기기' : '뜻 보기'}</button><span class="next">▶ SPACE</span></div>`;
+    $('koBtn').onclick = e => { e.stopPropagation(); dlg.showKo = !dlg.showKo; renderDlg(); };
+  } else if (s.shop) {
+    $('dName').textContent = '🛍 ' + dlg.npc.name;
+    const cards = Object.entries(ITEMS).filter(([, it]) => it.shop === s.shop).map(([k, it]) => {
+      const own = st.owned.includes(k);
+      return `<button class="icard ${own ? 'owned' : ''}" data-k="${k}"><div class="i-jp jp">${it.jp}</div><div class="i-ko">${it.ko}</div><div class="i-p"><b>${own ? '구입함' : '¥' + it.price}</b><span class="jp">${own ? '' : PRICE_RD[it.price]}</span></div></button>`;
+    }).join('');
+    $('dBody').innerHTML = `<div class="ask">사고 싶은 물건을 고르세요 · 값은 일본어로 읽어 보세요</div><div class="shopgrid">${cards}</div><div class="shopfoot"><span>지갑 <b style="color:var(--orange)">¥${st.yen.toLocaleString()}</b></span><button class="tbtn" id="leave">나가기</button></div>`;
+    $('dBody').querySelectorAll('.icard:not(.owned)').forEach(b => b.onclick = e => { e.stopPropagation(); buyFlow(b.dataset.k, s.shop); });
+    $('leave').onclick = e => { e.stopPropagation(); endTalk(); };
+  } else if (s.choose) {
+    $('dName').textContent = '✏ 나의 대답';
+    const opts = s.choose.opts.map((o, i) => `<button class="opt ${dlg.picked === i ? (o.ok ? 'right' : 'wrong') : ''}" data-i="${i}"><span><span class="o-jp jp">${o.jp}</span>${o.rd ? `<br><span class="o-rd">${o.rd}</span>` : ''}</span></button>`).join('');
+    let fb = '';
+    if (dlg.picked !== null) { const o = s.choose.opts[dlg.picked]; fb = o.ok ? `<div class="fb ok">○ 정답! ${o.ko} · ▶ SPACE</div>` : `<div class="fb ng">× ${o.ko} · 다시 골라 보세요</div>`; }
+    $('dBody').innerHTML = `<div class="ask">${s.choose.ask}</div><div class="opts">${opts}</div>${fb}`;
+    $('dBody').querySelectorAll('.opt').forEach(b => b.onclick = e => { e.stopPropagation(); pick(+b.dataset.i); });
+  }
+}
+function pick(i) {
+  const s = dlg.steps[dlg.i];
+  if (dlg.picked !== null && s.choose.opts[dlg.picked].ok) return;
+  const first = dlg.picked === null;
+  dlg.picked = i;
+  const o = s.choose.opts[i];
+  if (!o.ok) {
+    st.wrong++;
+    const right = s.choose.opts.find(x => x.ok);
+    st.guest.unshift({ who: dlg.npc.name.split(' · ')[0], unit: dlg.unit, ask: s.choose.ask.replace(/<[^>]+>/g, ''), bad: o.jp, why: o.ko, good: right.jp, goodKo: right.ko });
+  } else { st.solved++; total++; try { localStorage.setItem('jp-hompy-total', total); } catch (e) {} updateHud(); }
+  renderDlg();
+}
+function buyFlow(k, shop) {
+  const it = ITEMS[k], w = it.jp.split(' ').pop(), wr = it.rd.split(' ').pop();
+  const opts = [O(`この ${w}を ください。`, `코노 ${wr}오 쿠다사이.`, `이 ${it.ko} 주세요.`, true), O(`この ${w}は だれの ですか？`, `코노 ${wr}와 다레노 데스카?`, '누구 거냐고 물었어요 (4과)'), O(`${w}が います。`, `${wr}가 이마스.`, '물건에는 あります (11과)')];
+  const r = k.length % 3, order = [opts[(3 - r) % 3], opts[(4 - r) % 3], opts[(5 - r) % 3]];
+  dlg.steps.splice(dlg.i + 1, 0, { choose: { ask: `«이 ${it.ko} 주세요»라고 말해 보세요 · ¥${it.price} (<span class="jp">${PRICE_RD[it.price]}</span>)`, opts: order } }, { buy: k }, { shop });
+  dlg.i++; runStep();
+}
+function albaSteps() {
+  const pool = allSent().filter(([k]) => st.learned.includes(k) && k !== 'kana');
+  const rnd = mulberry32(st.alba * 97 + 13), pickN = [];
+  while (pickN.length < Math.min(3, pool.length)) { const c = pool[Math.floor(rnd() * pool.length)]; if (!pickN.includes(c)) pickN.push(c); }
+  const steps = [{ say: ['アルバイト、 おねがい！ おきゃくさんの ことば、 わかる？', '아루바이토, 오네가이! 오캬쿠산노 코토바, 와카루?', '알바 부탁해요! 손님 말 알아듣겠어요? (배운 문장 복습)'] }];
+  const meanings = allSent().filter(([k]) => k !== 'kana').map(([k, m]) => m.learn[k][2]);
+  pickN.forEach(([k, m]) => {
+    const [jp, , ko] = m.learn[k];
+    const others = meanings.filter(v => v !== ko), w1 = others[Math.floor(rnd() * others.length)], rest = others.filter(v => v !== w1), w2 = rest[Math.floor(rnd() * rest.length)];
+    const opts = [O(ko, '', ko, true), O(w1, '', '다른 문장의 뜻이에요'), O(w2, '', '다른 문장의 뜻이에요')], s = Math.floor(rnd() * 3);
+    steps.push({ choose: { ask: `손님: <span class="big jp">${jp}</span> · 무슨 뜻일까요? (${m.unit})`, opts: [opts[s % 3], opts[(s + 1) % 3], opts[(s + 2) % 3]] } });
+  });
+  steps.push({ say: ['おつかれさま！ はい、 アルバイト だい。', '오츠카레사마! 하이, 아루바이토 다이.', '수고했어요! 자, 알바비.'] }, { earn: 300 });
+  return steps;
+}
+function advance() {
+  if (!dlg) return;
+  const s = dlg.steps[dlg.i];
+  if (s.shop) return;
+  if (s.choose && !(dlg.picked !== null && s.choose.opts[dlg.picked].ok)) return;
+  dlg.i++; runStep();
+}
+function endTalk() { dlg = null; $('dlg').classList.remove('on'); if (!curMission()) setTimeout(showEnd, 400); }
+function complete(m) {
+  st.done[m.id] = true; st.doneAt[m.id] = new Date();
+  if (m.yen) st.yen += m.yen;
+  Object.keys(m.learn).forEach(k => { if (!st.learned.includes(k)) st.learned.push(k); });
+  updateHud(); toast(`${m.unit} 완료! ${m.yen ? `+ ¥${m.yen} · ` : ''}사진첩에 문장 ${Object.keys(m.learn).length}개`);
+}
+
+// ───── 화면 · 탭 ─────
+let view = 'home';
+document.querySelectorAll('.tab').forEach(b => b.onclick = () => setView(b.dataset.v));
+function setView(v) {
+  view = v;
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.v === v));
+  document.querySelectorAll('.view').forEach(el => el.classList.toggle('on', el.id === 'v-' + v));
+  const home = v === 'home';
+  $('cv').style.display = home ? 'block' : 'none'; $('now').style.display = home ? 'flex' : 'none';
+  if (!home && dlg) endTalk();
+  if (v === 'diary') renderDiary(); if (v === 'photo') renderPhoto(); if (v === 'room') renderRoom(); if (v === 'mini') renderStyle(); if (v === 'guest') renderGuest();
+}
+function updateHud() {
+  const n = ACTIVE.filter(m => st.done[m.id]).length, m = curMission();
+  $('cToday').textContent = st.solved; $('cTotal').textContent = total;
+  $('sProg').textContent = `${n} / ${ACTIVE.length}과`; $('sBar').style.width = `${n / ACTIVE.length * 100}%`;
+  $('sPhr').textContent = `${st.learned.length} / ${allSent().length}`; $('sYen').textContent = '¥' + st.yen.toLocaleString();
+  $('sRoom').textContent = `${st.owned.filter(k => ITEMS[k].kind === 'room').length} / ${ROOM_ITEMS.length}`;
+  const met = NPCS.filter(p => MISSIONS.some(x => x.npc === p.id && st.done[x.id])).map(p => p.name.split(' · ')[0]);
+  $('ichon').innerHTML = `<b>일촌</b> ${met.length ? met.join(' · ') : '미션을 하면 주민과 친해져요'}`;
+  $('now').innerHTML = m ? `<span class="tag">${m.unit}</span>${m.text}<small>📍 ${m.where}</small><span class="help">방향키 이동 · SPACE 말 걸기</span>` : '<span class="tag">완료</span>모든 미션 완료! ♡';
+  drawProfile();
+}
+function drawProfile() {
+  const c = $('miniCv').getContext('2d'); c.clearRect(0, 0, 60, 60);
+  R(c, 0, 46, 60, 14, '#d6efc4'); R(c, 0, 46, 60, 1, '#b8e0a0');
+  drawMinimi(c, playerLook(), 12, 6, 3, 'down', false);
+}
+let toastTimer;
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('on'), 2400); }
+function fmtDate(d) { return d ? `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}` : '-'; }
+function renderDiary() {
+  const m = curMission();
+  $('v-diary').innerHTML = `<h3><span>다이어리 · 과별 미션</span><small>${ACTIVE.filter(x => st.done[x.id]).length} / ${ACTIVE.length}과 · 문제 ${ACTIVE.reduce((a, x) => a + x.steps.filter(s => s.choose).length, 0)}개 · 범위 ${ACTIVE[0].unit} ~ ${ACTIVE[ACTIVE.length - 1].unit}</small></h3><ul class="diary">` +
+    ACTIVE.map(x => `<li class="${st.done[x.id] ? 'done' : x === m ? 'cur' : ''}"><span class="d">${fmtDate(st.doneAt[x.id])}</span><span class="u">${x.unit}</span><span>${x.text}</span><span class="s">${st.done[x.id] ? '완료 ♡' : x === m ? '지금 할 차례' : '…'}</span></li>`).join('') + '</ul>';
+}
+function renderPhoto() {
+  const all = allSent();
+  $('v-photo').innerHTML = `<h3><span>사진첩 · 문장 도감</span><small>${st.learned.length} / ${all.length}</small></h3><div class="cards">` + all.map(([k, m]) => {
+    if (!st.learned.includes(k)) return `<div class="scard locked">${m.unit} · 아직 비공개</div>`;
+    const [jp, rd, ko] = m.learn[k];
+    return `<div class="scard"><div class="s-jp jp">${jp}</div><div class="s-rd">${rd}</div><div class="s-ko">${ko}</div><div class="s-where">${m.unit} · ${m.where}</div></div>`;
+  }).join('') + '</div>';
+}
+function renderGuest() {
+  $('v-guest').innerHTML = `<h3><span>방명록 · 오답 노트</span><small>틀린 답을 고르면 주민이 글을 남겨요</small></h3>` + (st.guest.length ? st.guest.map(e =>
+    `<div class="guest"><div class="gh"><span><b>${e.who}</b> 님의 글 · ${e.unit}</span><span>${e.ask}</span></div><div class="gb"><span class="x jp">${e.bad}</span> → <span class="o jp">${e.good}</span><br>${e.why} · 정답 뜻: ${e.goodKo}</div></div>`).join('')
+    : '<div class="empty">아직 방명록이 비어 있어요.<br>틀린 문제는 여기 모여서 시험 전에 다시 볼 수 있어요.</div>');
+}
+function renderRoom() {
+  const have = ROOM_ITEMS.filter(k => st.owned.includes(k));
+  $('roomTitle').textContent = `소품 ${have.length} / ${ROOM_ITEMS.length}`;
+  const miss = ROOM_ITEMS.filter(k => !st.owned.includes(k)).map(k => `${ITEMS[k].jp}(${ITEMS[k].ko} ¥${ITEMS[k].price})`);
+  $('roomNote').textContent = miss.length ? `ざっかや에서 살 수 있어요 · ${miss.join(' · ')}` : '미니룸을 다 꾸몄어요! ♡';
+  drawRoom();
+}
+// 아이소메트릭 미니룸 (200 × 141 도트)
+function drawRoom() {
+  const c = $('roomCv').getContext('2d'), has = k => st.owned.includes(k);
+  c.clearRect(0, 0, 200, 141); R(c, 0, 0, 200, 141, '#fff0f5');
+  const poly = (pts, col) => { c.fillStyle = col; c.beginPath(); pts.forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y)); c.closePath(); c.fill(); };
+  const O0 = [100, 70];
+  poly([[20, 30], [100, -10], [100, 70], [20, 110]], '#ffe7ee');
+  poly([[100, -10], [180, 30], [180, 110], [100, 70]], '#fff3dc');
+  for (let i = 0; i < 8; i++) { c.fillStyle = 'rgba(255,170,190,0.18)'; c.beginPath(); c.moveTo(20 + i * 10, 30 - i * 5); c.lineTo(20 + i * 10, 110 - i * 5); c.lineTo(25 + i * 10, 107.5 - i * 5); c.lineTo(25 + i * 10, 27.5 - i * 5); c.fill(); }
+  poly([[20, 110], [100, 70], [180, 110], [100, 150]], '#e6c9a0');
+  for (let i = 1; i < 8; i++) { c.strokeStyle = 'rgba(160,120,80,0.25)'; c.lineWidth = 1; c.beginPath(); c.moveTo(20 + i * 10, 110 - i * 5); c.lineTo(100 + i * 10, 150 - i * 5); c.stroke(); }
+  // 창문 (오른쪽 벽)
+  poly([[120, 20], [150, 35], [150, 60], [120, 45]], '#9fd8f6'); poly([[123, 25], [147, 37], [147, 46], [123, 34]], '#c8ecff');
+  c.strokeStyle = '#ffffff'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(135, 27.5); c.lineTo(135, 52.5); c.stroke();
+  // 침대 (기본)
+  poly([[30, 92], [62, 76], [80, 85], [48, 101]], '#ffffff'); poly([[30, 92], [48, 101], [48, 108], [30, 99]], '#c9b2e8'); poly([[48, 101], [80, 85], [80, 92], [48, 108]], '#b79be0');
+  poly([[34, 90], [44, 85], [50, 88], [40, 93]], '#ffd6e2');
+  // 책상 (기본)
+  poly([[128, 82], [150, 71], [166, 79], [144, 90]], '#c99a6b'); poly([[144, 90], [166, 79], [166, 82], [144, 93]], '#a87a4e');
+  R(c, 145, 90, 2, 10, '#a87a4e'); R(c, 164, 81, 2, 10, '#a87a4e'); R(c, 129, 83, 2, 10, '#a87a4e');
+  R(c, 145, 70, 10, 7, '#56607e'); R(c, 146, 71, 8, 5, '#9fd8f6');
+  if (has('rug')) poly([[70, 112], [100, 97], [130, 112], [100, 127]], '#ff9fbf'), poly([[78, 112], [100, 101], [122, 112], [100, 123]], '#ffd0df');
+  if (has('poster')) { poly([[40, 40], [60, 30], [60, 52], [40, 62]], '#7d95d8'); poly([[43, 42], [57, 35], [57, 50], [43, 57]], '#ffd24d'); R(c, 48, 43, 4, 4, '#ff8a00'); }
+  if (has('lamp')) { R(c, 170, 74, 2, 14, '#56607e'); poly([[164, 72], [178, 72], [175, 66], [167, 66]], '#ffd24d'); c.fillStyle = 'rgba(255,220,120,0.35)'; c.beginPath(); c.arc(171, 74, 16, 0, 7); c.fill(); }
+  if (has('flower')) { R(c, 132, 76, 5, 5, '#e88a5a'); R(c, 134, 71, 1, 5, '#5aaa5a'); R(c, 131, 69, 3, 3, '#ff7fa8'); R(c, 135, 68, 3, 3, '#ffd24d'); }
+  if (has('cushion')) { poly([[86, 106], [96, 101], [104, 105], [94, 110]], '#7fd6f0'); poly([[104, 113], [114, 108], [122, 112], [112, 117]], '#ffbf4d'); }
+  if (has('record')) { poly([[58, 116], [72, 109], [84, 115], [70, 122]], '#8a5a3a'); c.fillStyle = '#2a2230'; c.beginPath(); c.ellipse(70, 114, 7, 3.5, 0, 0, 7); c.fill(); R(c, 69, 113, 2, 2, '#ff7fa8'); R(c, 80, 104, 2, 3, '#ff8a00'); R(c, 82, 102, 2, 2, '#ff8a00'); }
+  drawMinimi(c, playerLook(), 92, 86, 1.5, 'down', false);
+}
+function renderStyle() {
+  const rows = Object.entries(ITEMS).filter(([, it]) => it.kind === 'coat' || it.kind === 'acc').map(([k, it]) => {
+    const own = st.owned.includes(k), on = it.kind === 'coat' ? st.look.coat === k : st.look.accs.includes(k);
+    return `<button class="wbtn ${own ? (on ? 'on' : '') : 'lock'}" data-k="${k}"><span><span class="jp">${it.jp}</span> · ${it.ko}</span><small>${own ? (on ? '입는 중 ♡' : '입기') : 'ふくや ¥' + it.price}</small></button>`;
+  }).join('');
+  $('wlist').innerHTML = `<button class="wbtn ${st.look.coat ? '' : 'on'}" data-k="base"><span>기본 옷 · 노란 티셔츠</span><small>${st.look.coat ? '입기' : '입는 중 ♡'}</small></button>` + rows;
+  $('wlist').querySelectorAll('.wbtn:not(.lock)').forEach(b => b.onclick = () => {
+    const k = b.dataset.k;
+    if (k === 'base') st.look.coat = null; else if (ITEMS[k].kind === 'coat') st.look.coat = k;
+    else st.look.accs = st.look.accs.includes(k) ? st.look.accs.filter(a => a !== k) : [...st.look.accs, k];
+    renderStyle(); drawProfile();
+  });
+  const c = $('styleCv').getContext('2d'); c.clearRect(0, 0, 44, 52); R(c, 0, 40, 44, 12, '#d6efc4');
+  drawMinimi(c, playerLook(), 4, 2, 3, 'down', false);
+}
+function showEnd() {
+  $('end').innerHTML = `<div class="card"><div style="color:var(--pink);font-weight:bold">♡ 초급 1~15과 완주 ♡</div><div class="big">¥${st.yen.toLocaleString()}</div><div style="color:var(--sub)">남은 돈 · 시작 ¥500</div>
+    <div class="row"><div><b>${st.solved}</b>맞힌 문제</div><div><b>${st.learned.length}</b>모은 문장</div><div><b>${st.wrong}</b>방명록 글</div></div>
+    <div style="color:var(--sub);margin-bottom:12px">틀린 문제는 방명록에서 다시 볼 수 있어요</div><button class="bigbtn" id="toGuest">방명록 보러 가기</button></div>`;
+  $('end').classList.add('on'); $('toGuest').onclick = () => { $('end').classList.remove('on'); setView('guest'); };
+}
+
+// ───── 이동 · 충돌 ─────
+const keys = {};
+window.addEventListener('keydown', e => { const k = e.key.toLowerCase(); if ([' ', 'enter'].includes(k)) { e.preventDefault(); action(); return; } keys[k] = true; });
+window.addEventListener('keyup', e => { keys[e.key.toLowerCase()] = false; });
+document.querySelectorAll('.pad button').forEach(b => { const d = b.dataset.d; b.addEventListener('pointerdown', e => { e.preventDefault(); keys['pad-' + d] = true; }); ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => b.addEventListener(ev, () => keys['pad-' + d] = false)); });
+$('abtn').onclick = action; $('dlg').addEventListener('click', advance);
+cv.addEventListener('click', () => { const n = nearNpc(); if (n && !dlg) startTalk(n); });
+function action() { if (view !== 'home') return; if (dlg) { advance(); return; } const n = nearNpc(); if (n) startTalk(n); }
+function nearNpc() { let best = null, bd = 1.45; NPCS.forEach(n => { const d = Math.hypot(n.x - player.x, n.y - player.y); if (d < bd) { bd = d; best = n; } }); return best; }
+function inRect(x, y, r, rx, ry, rw, rh) { return x > rx - r && x < rx + rw + r && y > ry && y < ry + rh + 0.15; }
+function blocked(x, y) {
+  const r = 0.28;
+  if (x < r || y < 1 || x > COLS - r || y > ROWS - 0.6) return true;
+  for (const b of BUILDINGS) if (inRect(x, y, r, b.x, b.y, b.w, b.h)) return true;
+  for (const [tx, ty] of TREES) if (Math.hypot(tx - x, ty + 0.3 - y) < 0.5) return true;
+  if (((x - POND.cx) / (POND.rx + 0.2)) ** 2 + ((y - POND.cy) / (POND.ry + 0.25)) ** 2 < 1) return true;
+  if (inRect(x, y, r, BENCH.x, BENCH.y - 0.1, BENCH.w, BENCH.h + 0.1)) return true;
+  if (inRect(x, y, r, POSTER.x, POSTER.y, POSTER.w, POSTER.h)) return true;
+  for (const [vx, vy] of VENDING) if (inRect(x, y, r, vx, vy - 0.6, 0.7, 0.6)) return true;
+  for (const n of NPCS) if (Math.hypot(n.x - x, n.y - y) < 0.55) return true;
+  return false;
+}
+function move(dt) {
+  if (dlg || view !== 'home' || $('end').classList.contains('on')) { player.moving = false; return; }
+  let dx = 0, dy = 0;
+  if (keys['arrowleft'] || keys['a'] || keys['pad-left']) dx -= 1;
+  if (keys['arrowright'] || keys['d'] || keys['pad-right']) dx += 1;
+  if (keys['arrowup'] || keys['w'] || keys['pad-up']) dy -= 1;
+  if (keys['arrowdown'] || keys['s'] || keys['pad-down']) dy += 1;
+  player.moving = dx || dy; if (!player.moving) return;
+  player.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 'left' : 'right') : (dy < 0 ? 'up' : 'down');
+  const len = Math.hypot(dx, dy), sp = 4.2 * dt, nx = player.x + dx / len * sp, ny = player.y + dy / len * sp;
+  if (!blocked(nx, player.y)) player.x = nx;
+  if (!blocked(player.x, ny)) player.y = ny;
+  player.step += dt * 8;
+}
+
+// ───── 마을 도트 그리기 ─────
+const bg = document.createElement('canvas'); bg.width = WW; bg.height = WH;
+function drawStatic() {
+  const c = bg.getContext('2d'), rnd = mulberry32(3);
+  R(c, 0, 0, WW, WH, '#a9e28c');
+  for (let i = 0; i < 1400; i++) R(c, Math.floor(rnd() * WW / 2) * 2, Math.floor(rnd() * WH / 2) * 2, 2, 2, rnd() < 0.5 ? '#9bd87c' : '#b6e89c');
+  PATHS.forEach(([x, y, w, h]) => {
+    R(c, x * T, y * T + 2, w * T, h * T - 4, '#f4dfae');
+    R(c, x * T, y * T + 2, w * T, 1, '#e3c88c'); R(c, x * T, (y + h) * T - 3, w * T, 1, '#e3c88c');
+    for (let i = 0; i < w * h * 4; i++) R(c, (x + rnd() * w) * T, (y + 0.2 + rnd() * (h - 0.4)) * T, 2, 1, '#e6cd96');
+  });
+  // 꽃
+  for (let i = 0; i < 160; i++) {
+    const x = rnd() * COLS, y = 1 + rnd() * 16.4;
+    if (blocked(x, y) || PATHS.some(([px, py, pw, ph]) => x > px && x < px + pw && y > py - 0.2 && y < py + ph + 0.2)) continue;
+    const col = ['#ffffff', '#ffb3c8', '#fff08a', '#c9b2ff'][Math.floor(rnd() * 4)], fx = Math.round(x * T), fy = Math.round(y * T);
+    R(c, fx - 1, fy, 3, 1, col); R(c, fx, fy - 1, 1, 3, col); R(c, fx, fy, 1, 1, '#ffbf4d');
+  }
+  // 연못
+  for (let yy = -POND.ry * T - 2; yy <= POND.ry * T + 2; yy++) { const hw = (POND.rx * T + 2) * Math.sqrt(Math.max(0, 1 - (yy / (POND.ry * T + 2)) ** 2)); R(c, POND.cx * T - hw, POND.cy * T + yy, hw * 2, 1, '#e8d6a8'); }
+  for (let yy = -POND.ry * T; yy <= POND.ry * T; yy++) { const hw = POND.rx * T * Math.sqrt(Math.max(0, 1 - (yy / (POND.ry * T)) ** 2)); R(c, POND.cx * T - hw, POND.cy * T + yy, hw * 2, 1, yy < -POND.ry * T * 0.3 ? '#9fd8f6' : '#7cc6ec'); }
+  R(c, 3.4 * T, 7.4 * T, 6, 3, '#6cbf6a'); R(c, 5.4 * T, 7.0 * T, 6, 3, '#6cbf6a'); R(c, 5.4 * T + 2, 7.0 * T - 1, 2, 2, '#ff9fbf');
+  // 벤치 · 포스터 · 자판기
+  R(c, BENCH.x * T, BENCH.y * T, BENCH.w * T, 4, '#c98a5a'); R(c, BENCH.x * T, BENCH.y * T + 6, BENCH.w * T, 4, '#b5764a');
+  R(c, BENCH.x * T + 3, BENCH.y * T + 10, 2, 4, '#8a5a3a'); R(c, (BENCH.x + BENCH.w) * T - 5, BENCH.y * T + 10, 2, 4, '#8a5a3a');
+  R(c, POSTER.x * T, POSTER.y * T - 2, POSTER.w * T, 18, '#ffffff'); R(c, POSTER.x * T, POSTER.y * T - 2, POSTER.w * T, 2, '#ff7fa8');
+  R(c, POSTER.x * T + 4, POSTER.y * T + 16, 2, 8, '#8a5a3a'); R(c, (POSTER.x + POSTER.w) * T - 6, POSTER.y * T + 16, 2, 8, '#8a5a3a');
+  VENDING.forEach(([vx, vy]) => { const x = vx * T, y = vy * T - 14; R(c, x, y, 14, 18, '#f2f4f8'); R(c, x + 2, y + 2, 10, 7, '#9fd8f6'); ['#ff7fa8', '#ffd24d', '#7fd6b4'].forEach((col, i) => R(c, x + 3 + i * 3, y + 4, 2, 4, col)); R(c, x + 3, y + 12, 8, 3, '#56607e'); });
+  BUILDINGS.forEach(b => drawBuilding(c, b));
+  TREES.forEach(([tx, ty]) => {
+    const x = Math.round(tx * T), y = Math.round(ty * T);
+    R(c, x - 8, y + 7, 16, 2, 'rgba(60,110,60,0.35)'); R(c, x - 2, y, 4, 8, '#a5714a');
+    R(c, x - 9, y - 10, 18, 10, '#5cb85c'); R(c, x - 7, y - 14, 14, 4, '#5cb85c'); R(c, x - 5, y - 16, 10, 2, '#5cb85c'); R(c, x - 10, y - 7, 20, 5, '#5cb85c');
+    R(c, x - 5, y - 13, 5, 3, '#7fd17a'); R(c, x - 8, y - 3, 16, 2, '#4aa64a');
+    if ((Math.round(tx * 10) % 3) === 0) { R(c, x - 5, y - 8, 2, 2, '#ff9a5c'); R(c, x + 3, y - 11, 2, 2, '#ff9a5c'); R(c, x + 1, y - 4, 2, 2, '#ff9a5c'); }
+  });
+}
+function drawBuilding(c, b) {
+  const x = Math.round(b.x * T), y = Math.round(b.y * T), w = Math.round(b.w * T), h = b.h * T, rh = 22;
+  R(c, x + 3, y + h - 2, w, 4, 'rgba(60,110,60,0.3)');
+  R(c, x + 3, y + rh - 3, w - 6, h - rh + 3, b.wall); R(c, x + 3, y + h - 2, w - 6, 1, '#d8cbb8');
+  for (let i = 0; i < 4; i++) R(c, x - 2 + i * 2, y + rh - 4 - i * 5, w + 4 - i * 4, 5, i % 2 ? b.roof : shade(b.roof, -18));
+  R(c, x - 2, y + rh - 4, w + 4, 1, shade(b.roof, -40));
+  const wy = y + rh + 6;
+  [[x + 6, wy], [x + w - 6 - 12, wy]].forEach(([wx, wy2]) => { R(c, wx, wy2, 12, 10, '#ffffff'); R(c, wx + 1, wy2 + 1, 10, 8, '#9fd8f6'); R(c, wx + 6, wy2 + 1, 1, 8, '#ffffff'); R(c, wx + 2, wy2 + 2, 2, 3, '#d6f1ff'); });
+  const dw = 12, dh = 16, dx = x + Math.round(w / 2 - dw / 2), dy = Math.round(y + h - dh);
+  R(c, dx, dy, dw, dh, '#b5764a'); R(c, dx + 1, dy + 1, dw - 2, dh - 1, '#c98a5a'); R(c, dx + dw - 4, dy + 8, 2, 2, '#ffd24d');
+  if (b.deco === 'awning') for (let i = 0; i < 8; i++) R(c, x + 3 + i * (w - 6) / 8, wy - 5, (w - 6) / 8, 4, i % 2 ? '#ffffff' : '#ff8fb0');
+  if (b.deco === 'stripe') { R(c, x + 3, wy - 5, w - 6, 2, '#5cc8a0'); R(c, x + 3, wy - 3, w - 6, 2, '#ffa64d'); }
+  if (b.deco === 'noren') for (let i = 0; i < 3; i++) R(c, dx - 3 + i * 6, dy - 1, 5, 7, '#3e5a96');
+  if (b.deco === 'clock') { R(c, x + w / 2 - 5, y + rh + 1, 10, 10, '#ffffff'); R(c, x + w / 2 - 4, y + rh + 2, 8, 8, '#f2f4f8'); R(c, x + w / 2, y + rh + 3, 1, 3, '#33283a'); R(c, x + w / 2, y + rh + 6, 3, 1, '#33283a'); }
+  if (b.deco === 'boxes') [[x + 4, y + h - 8], [x + 11, y + h - 11], [x + w - 13, y + h - 8]].forEach(([bx, by]) => { R(c, bx, by, 9, 8, '#d9a86c'); R(c, bx + 4, by, 1, 8, '#b5864a'); });
+}
+function shade(hex, d) { const n = parseInt(hex.slice(1), 16); const f = v => Math.max(0, Math.min(255, v + d)); return `rgb(${f(n >> 16)},${f((n >> 8) & 255)},${f(n & 255)})`; }
+function label(x, y, text, bgc, fg, border, size = 12) {
+  ctx.font = `bold ${size}px "Yu Gothic", Gulim, sans-serif`;
+  const w = Math.ceil(ctx.measureText(text).width) + 12, h = size + 8;
+  ctx.fillStyle = border; ctx.fillRect(Math.round(x - w / 2) - 1, Math.round(y - h / 2) - 1, w + 2, h + 2);
+  ctx.fillStyle = bgc; ctx.fillRect(Math.round(x - w / 2), Math.round(y - h / 2), w, h);
+  ctx.fillStyle = fg; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(text, Math.round(x), Math.round(y) + 1);
+}
+let last = performance.now(), clock = 0;
+function frame(now) {
+  const dt = Math.min(0.05, (now - last) / 1000); last = now; clock += dt;
+  move(dt);
+  if (view === 'home') {
+    const camX = Math.round(Math.max(0, Math.min(WW - VW, player.x * T - VW / 2))), camY = Math.round(Math.max(0, Math.min(WH - VH, player.y * T - VH / 2)));
+    g.drawImage(bg, -camX, -camY);
+    // 연못 반짝임
+    for (let i = 0; i < 3; i++) R(g, (POND.cx - 1 + i) * T + Math.round(Math.sin(clock * 2 + i) * 3) - camX, (POND.cy - 0.2 + i * 0.2) * T - camY, 4, 1, '#ffffff');
+    const ds = NPCS.map(n => ({ y: n.y, f: () => drawMinimi(g, n, n.x * T - 12 - camX, n.y * T - 30 - camY + (Math.sin(clock * 2 + n.x) > 0.6 ? -1 : 0), 2, 'down', false) }));
+    ds.push({ y: player.y, f: () => drawMinimi(g, playerLook(), player.x * T - 12 - camX, player.y * T - 30 - camY - (player.moving && Math.floor(player.step) % 2 ? 1 : 0), 2, player.dir, player.moving && Math.floor(player.step) % 2) });
+    ds.sort((a, b) => a.y - b.y).forEach(d => d.f());
+    ctx.imageSmoothingEnabled = false; ctx.drawImage(buf, 0, 0, VW * SC, VH * SC);
+    // 간판 · 말풍선 (선명한 글씨)
+    BUILDINGS.forEach(b => label(((b.x + b.w / 2) * T - camX) * SC, (b.y * T + 8 - camY) * SC, b.sign, '#ffffff', '#4b4b4b', shade(b.roof, -10), 13));
+    label(((POSTER.x + POSTER.w / 2) * T - camX) * SC, (POSTER.y * T + 6 - camY) * SC, 'コンサート ♪', '#ffffff', '#ff5f92', '#ff7fa8', 11);
+    const near = dlg ? null : nearNpc(), m = curMission();
+    NPCS.forEach(n => {
+      const sx = (n.x * T - camX) * SC, sy = (n.y * T - 40 - camY) * SC;
+      if (near === n) label(sx, sy, trL(`${n.name.split(' · ')[0]} · SPACE`), '#fffbe6', '#b56a00', '#f2c46b', 11);
+      else if (m && m.npc === n.id) label(sx, sy + (Math.floor(clock * 3) % 2 ? -2 : 0), trL(`! ${m.unit}`), '#ff8a00', '#ffffff', '#d96f00', 11);
+    });
+  }
+  requestAnimationFrame(frame);
+}
+
+// ───── BGM · 코드로 새로 만든 8비트 원곡 (기존 곡 아님) ─────
+const TRACKS = {
+  t1: { name: 'はじめの うた · 첫 산책', bpm: 112, wave: 'square',
+    mel: 'C5 E5 G5 E5 A5 G5 E5 - D5 E5 G5 A5 G5 - - - C5 E5 G5 E5 A5 C6 A5 - G5 E5 D5 E5 C5 - - -', bass: 'C3 C3 A2 A2 F2 F2 G2 G2' },
+  t2: { name: 'ゆうやけ ポップ · 노을 팝', bpm: 96, wave: 'triangle',
+    mel: 'A4 C5 D5 F5 - E5 D5 C5 D5 - A4 - C5 - - - A4 C5 D5 F5 - G5 F5 E5 F5 - D5 - C5 - - -', bass: 'F2 F2 D2 D2 A#2 A#2 C3 C3' },
+  t3: { name: 'えきまえ ピコピコ · 역 앞', bpm: 140, wave: 'square',
+    mel: 'G5 B5 D6 B5 G5 B5 D6 - E5 G5 B5 G5 E5 G5 B5 - C5 E5 G5 E5 D5 F#5 A5 F#5 G5 - D5 - G5 - - -', bass: 'G2 G2 E2 E2 C2 C2 D2 D2' },
+};
+const bgm = { cur: 't1', on: false, ac: null, timer: null, step: 0, next: 0 };
+const ownedTracks = () => ['t1', ...Object.entries(ITEMS).filter(([k, it]) => it.kind === 'bgm' && st.owned.includes(k)).map(([, it]) => it.track)];
+function freq(n) { const m = n.match(/^([A-G])(#?)(\d)$/); const idx = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }[m[1]] + (m[2] ? 1 : 0); return 440 * Math.pow(2, (idx + (+m[3] - 4) * 12 - 9) / 12); }
+function tone(time, f, dur, wave, vol) {
+  const o = bgm.ac.createOscillator(), gn = bgm.ac.createGain();
+  o.type = wave; o.frequency.value = f; gn.gain.setValueAtTime(vol, time); gn.gain.exponentialRampToValueAtTime(0.0001, time + dur);
+  o.connect(gn).connect(bgm.ac.destination); o.start(time); o.stop(time + dur + 0.02);
+}
+function schedule() {
+  const tr = TRACKS[bgm.cur], mel = tr.mel.split(' '), bass = tr.bass.split(' '), sd = 60 / tr.bpm / 2;
+  while (bgm.next < bgm.ac.currentTime + 0.2) {
+    const i = bgm.step % mel.length;
+    if (mel[i] !== '-') tone(bgm.next, freq(mel[i]), sd * 0.9, tr.wave, 0.05);
+    if (i % 4 === 0) tone(bgm.next, freq(bass[(i / 4) % bass.length]), sd * 3.6, 'triangle', 0.07);
+    bgm.next += sd; bgm.step++;
+  }
+}
+function playBgm() {
+  if (!bgm.ac) bgm.ac = new (window.AudioContext || window.webkitAudioContext)();
+  bgm.ac.resume(); bgm.step = 0; bgm.next = bgm.ac.currentTime + 0.05; clearInterval(bgm.timer); bgm.timer = setInterval(schedule, 50); bgm.on = true; renderBgm();
+}
+function stopBgm() { clearInterval(bgm.timer); bgm.on = false; renderBgm(); }
+function renderBgm() { $('bgmName').textContent = TRACKS[bgm.cur].name; $('bgmPlay').textContent = bgm.on ? '■' : '▶'; $('bgmPlay').classList.toggle('on', bgm.on); }
+function switchBgm(d) { const list = ownedTracks(), i = list.indexOf(bgm.cur); bgm.cur = list[(i + d + list.length) % list.length]; if (bgm.on) playBgm(); else renderBgm(); }
+$('bgmPlay').onclick = () => bgm.on ? stopBgm() : playBgm();
+$('bgmPrev').onclick = () => switchBgm(-1); $('bgmNext').onclick = () => switchBgm(1);
+renderBgm();
+
+// ───── 시험 범위 선택 ─────
+function openRange() {
+  const opts = MISSIONS.map((m, i) => `<option value="${i}">${m.unit}</option>`).join('');
+  $('rFrom').innerHTML = opts; $('rTo').innerHTML = opts;
+  $('rFrom').value = MISSIONS.indexOf(ACTIVE[0]); $('rTo').value = MISSIONS.indexOf(ACTIVE[ACTIVE.length - 1]);
+  rangeCount(); $('range').classList.add('on');
+}
+function rangeCount() {
+  let a = +$('rFrom').value, b = +$('rTo').value; if (a > b) [a, b] = [b, a];
+  const sel = MISSIONS.slice(a, b + 1), q = sel.reduce((s, m) => s + m.steps.filter(x => x.choose).length, 0);
+  $('rCnt').textContent = `${sel[0].unit} ~ ${sel[sel.length - 1].unit} · 미션 ${sel.length}개 · 문제 ${q}개`;
+}
+function setRange(a, b) {
+  if (a > b) [a, b] = [b, a];
+  ACTIVE = MISSIONS.slice(a, b + 1);
+  $('topRange').textContent = `· 시험 범위 ${ACTIVE[0].unit} ~ ${ACTIVE[ACTIVE.length - 1].unit}`;
+  updateHud();
+}
+$('rFrom').onchange = rangeCount; $('rTo').onchange = rangeCount;
+$('rGo').onclick = () => { setRange(+$('rFrom').value, +$('rTo').value); $('range').classList.remove('on'); setView('home'); toast(`시험 범위 ${ACTIVE[0].unit} ~ ${ACTIVE[ACTIVE.length - 1].unit}로 마을을 만들었어요`); };
+$('tabRange').onclick = openRange;
+
+// ───── 시작 · 스크린샷용 상태 ─────
+drawStatic();
+function progress(k) { MISSIONS.slice(0, k).forEach(m => { st.done[m.id] = true; st.doneAt[m.id] = new Date(); st.yen += m.yen - m.steps.reduce((a, s) => a + (s.pay || 0), 0); Object.keys(m.learn).forEach(x => st.learned.push(x)); st.solved += m.steps.filter(s => s.choose).length; }); total = st.solved; }
+function jump(npcId, stepIndex, pickIdx) {
+  const n = NPCS.find(v => v.id === npcId);
+  player.x = n.x - 1.1; player.y = n.y + 0.1; player.dir = 'right';
+  startTalk(n);
+  while (dlg && dlg.i < stepIndex) { const s = dlg.steps[dlg.i]; if (s.choose) { dlg.picked = s.choose.opts.findIndex(o => o.ok); } advance(); }
+  if (pickIdx !== undefined) pick(pickIdx);
+}
+const shot = new URLSearchParams(location.search).get('shot');
+if (!shot) openRange();
+if (shot === 'range') { openRange(); $('rFrom').value = 5; $('rTo').value = 10; rangeCount(); }
+if (shot === 'ranged') { setRange(5, 10); setView('diary'); }
+if (shot === 'town') { player.x = 10.0; player.y = 6.6; }
+if (shot === 'kana') { jump('hana', 1); }
+if (shot === 'drill') { progress(4); jump('kenta', 4, 0); }
+if (shot === 'u8') { progress(6); jump('mio', 1, 0); }
+if (shot === 'shop') { progress(9); jump('kai', 1); }
+if (shot === 'diary') { progress(6); setView('diary'); }
+if (shot === 'photo') { progress(7); setView('photo'); }
+if (shot === 'guest') { progress(8); st.guest = [
+  { who: '미오', unit: '8과', ask: '«다정한 사람이 좋아요»', bad: 'やさしいな ひとが すき です。', why: 'い형용사 뒤에는 な가 없어요', good: 'やさしい ひとが すき です。', goodKo: '다정한 사람이 좋아요.' },
+  { who: '사토', unit: '5과', ask: '연습 1/3 4시는?', bad: 'よんじ', why: '4시는 よじ (불규칙)', good: 'よじ', goodKo: '4시 = よじ' },
+  { who: '켄타', unit: '6과', ask: '연습 2/3 20일은?', bad: 'にじゅうにち', why: '20일은 はつか (불규칙)', good: 'はつか', goodKo: '20일 = はつか' }]; st.wrong = 3; setView('guest'); }
+if (shot === 'room') { progress(14); st.owned = ['lamp', 'flower', 'poster', 'rug', 'record', 'cushion', 'navy', 'beanie']; st.look = { coat: 'navy', accs: ['beanie'] }; setView('room'); }
+if (shot === 'mini') { progress(14); st.owned = ['navy', 'red', 'beanie', 'muffler']; st.look = { coat: 'red', accs: ['beanie', 'muffler'] }; setView('mini'); }
+if (shot === 'shop2') { progress(9); st.yen = 3000; jump('kai', 1); }
+if (shot === 'end') { progress(MISSIONS.length); st.wrong = 6; showEnd(); }
+updateHud();
+
+// ───── 영어 화면 모드 (?lang=en) · 피치 자료용 · 일본어 문장은 그대로 ─────
+if (new URLSearchParams(location.search).get('lang') !== 'ko') {
+  document.documentElement.lang = 'en';
+  const EXACT = { '나': 'Me', '진도': 'Progress', '모은 문장': 'Phrases', '지갑': 'Wallet', '미니룸 소품': 'Room items', '일촌': 'Friends',
+    '홈': 'Home', '마을 산책': 'Town walk', '다이어리': 'Diary', '과별 미션': 'Unit quests', '사진첩': 'Album', '문장 도감': 'Phrase book', '미니룸': 'Mini room', '내 방': 'My room',
+    '미니미': 'Avatar', '꾸미기': 'Dress up', '방명록': 'Guestbook', '오답 노트': 'Error log', '시험 범위': 'Exam range', '바꾸기': 'Change',
+    '부터': 'to', '까지': '', '에코': 'eko', '에키': 'eki', '아키': 'aki', '역': 'station', '입기': 'wear', '구입함': 'bought', '나가기': 'Leave',
+    '램프': 'lamp', '꽃': 'flower', '포스터': 'poster', '러그': 'rug', '쿠션': 'cushion', '레코드': 'record', '이치니치': 'ichinichi', '츠이타치': 'tsuitachi', '익카': 'ikka', '…': '…' };
+  const SUB = {
+    '♡ 나의 일본어 홈피 ': '♡ My Nihongo Hompy ', '· 초급 1~15과': '· Beginner Units 1–15', '· 시험 범위 ': '· Exam range ', '열공 중 ♪': 'studying hard ♪', '초급 일본어 수강생': 'beginner Japanese student',
+    '미션을 하면 주민과 친해져요': 'Finish quests to make friends', '방향키 이동 · SPACE 말 걸기': 'Arrow keys to move · SPACE to talk', '✏ 나의 대답': '✏ My answer', '뜻 숨기기': 'Hide meaning', '뜻 보기': 'Meaning',
+    '○ 정답! ': '○ Correct! ', ' · 다시 골라 보세요': ' · Try again', '복습 알바': 'Review job',
+    '♡ 내 시험 범위로 마을 만들기': '♡ Build a town from my exam range', '이번 시험에 나오는 과만 골라 주세요.': 'Pick only the units on your exam.', '고른 과만 마을 미션과 연습 문제로 열려요.': 'Only those units open as quests and drills.',
+    '교재 · 초급 상권 (1~15과)': 'Textbook · Beginner Book 1 (Units 1–15)', '이 범위로 시작하기': 'Start with this range',
+    '다이어리 · 과별 미션': 'Diary · Unit quests', '· 범위 ': '· range ', '완료 ♡': 'Done ♡', '지금 할 차례': 'Up next', '사진첩 · 문장 도감': 'Album · Phrase book', '아직 비공개': 'locked',
+    '방명록 · 오답 노트': 'Guestbook · Error log', '틀린 답을 고르면 주민이 글을 남겨요': 'Villagers leave a note when you miss', ' 님의 글 · ': "'s note · ", '정답 뜻: ': 'correct meaning: ',
+    '사고 싶은 물건을 고르세요 · 값은 일본어로 읽어 보세요': 'Pick an item · read the price in Japanese', 'BGM CD «노을 팝»': 'BGM CD "Sunset Pop"', 'BGM CD «역 앞 피코피코»': 'BGM CD "Station Piko-piko"',
+    '미니룸을 다 꾸몄어요! ♡': 'Room fully decorated! ♡', 'ざっかや에서 살 수 있어요 · ': 'Sold at ざっかや · ', '미니미 꾸미기': 'Dress up your avatar', 'ふくや에서 산 옷을 입혀요': 'Wear clothes bought at ふくや',
+    '기본 옷 · 노란 티셔츠': 'Basic · yellow T-shirt', '입는 중 ♡': 'wearing ♡', '남색 코트': 'navy coat', '빨간 코트': 'red coat', '머플러': 'muffler', '안경': 'glasses', '모자': 'beanie',
+    '첫 산책': 'First Walk', '노을 팝': 'Sunset Pop', '역 앞': 'Station Front',
+    ' 는 어떻게 읽을까요?': ' — how do you read it?', '«다정한 사람이 좋아요» · 문법이 맞는 것은?': '"I like kind people" · which one is correct?', '«다정한 사람이 좋아요»': '"I like kind people"',
+    'い형용사 뒤에는 な가 없어요': 'no な after an い-adjective', '«하루»라는 뜻. 날짜 1일은 ついたち': 'means "one day"; the 1st of the month is ついたち',
+    '4시는 よじ (불규칙)': "4 o'clock is よじ (irregular)", '20일은 はつか (불규칙)': 'the 20th is はつか (irregular)', '4시 = よじ': "4 o'clock = よじ", '20일 = はつか': 'the 20th = はつか',
+    '연습 ': 'Drill ', '4시는?': "4 o'clock?", '20일은?': 'The 20th?', '1일은?': 'The 1st?',
+    '야사시-나 히토가 스키 데스.': 'yasashii na hito ga suki desu.', '야사시- 히토오 스키 데스.': 'yasashii hito o suki desu.',
+    // 주민
+    '하나 · 동네 안내원': 'Hana · town guide', '미오 · 카페 점장': 'Mio · café manager', '유이 · 옷가게 사장': 'Yui · clothes shop', '아오이 · 도서관 사서': 'Aoi · librarian', '켄타 · 이웃': 'Kenta · neighbor',
+    '카이 · 잡화점 ざっかや': 'Kai · general store ざっかや', '다이스케 · 라멘집 사장': 'Daisuke · ramen shop', '사토 · 역무원': 'Sato · station staff', '렌 · 이사하는 이웃': 'Ren · moving neighbor',
+    // 미션
+    '하나와 히라가나 · 가타카나 간판 읽기': 'Read hiragana & katakana signs with Hana', '이웃 켄타에게 자기소개하기': 'Introduce yourself to neighbor Kenta', '역 분실물 스마트폰 주인 찾기': 'Find the owner of a lost phone at the station',
+    '역에서 지금 몇 시인지 말하기': 'Tell the time at the station', '켄타의 생일 날짜 알아내기': "Find out Kenta's birthday", '카페 새 케이크 칭찬하기 (시식 알바)': "Praise the café's new cake (tasting job)",
+    '미오 점장과 좋아하는 사람 이야기': 'Talk with Mio about people you like', '«이 동네에서 제일 맛있는 가게» 말하기': 'Name "the best shop in town"', '옷가게에서 블라우스 사기 (¥1,500)': 'Buy a blouse at the clothes shop (¥1,500)',
+    '하나와 «います · あります» 구분하기': 'Tell います from あります with Hana', '도서관에서 매일 하는 일 말하기': 'Talk about your daily routine at the library', '켄타를 콘서트에 초대하기': 'Invite Kenta to a concert',
+    '사서 아오이에게 내 꿈 말하기': 'Tell librarian Aoi your dream', '이사하는 이웃 렌 도와주기': 'Help neighbor Ren move house',
+    // 문장 도감 · 읽기 · 뜻
+    '에키 · 카페 · 콘비니': 'eki · kafe · konbini', '역 · 카페 · 편의점 (간판 읽기)': 'station · café · convenience store (signs)',
+    '하지메마시테. 도-조 요로시쿠.': 'hajimemashite. dōzo yoroshiku.', '처음 뵙겠습니다. 잘 부탁해요.': 'Nice to meet you. Glad to know you.',
+    '카이샤인 쟈 아리마셍.': 'kaishain ja arimasen.', '회사원이 아닙니다.': 'I am not an office worker.',
+    '코노 스마호와 다레노 데스카?': 'kono sumaho wa dare no desu ka?', '이 스마트폰은 누구 거예요?': 'Whose smartphone is this?',
+    '소레와 켄타산노 데스.': 'sore wa Kenta-san no desu.', '그건 켄타 씨 거예요.': "That's Kenta's.",
+    '이마 난지 데스카?': 'ima nanji desu ka?', '지금 몇 시예요?': 'What time is it now?', '니지항 데스.': 'niji han desu.', '2시 반이에요.': "It's half past two.",
+    '탄죠-비와 이츠 데스카?': 'tanjōbi wa itsu desu ka?', '생일은 언제예요?': 'When is your birthday?', '시가츠 요-카 데스.': 'shigatsu yōka desu.', '4월 8일이에요.': "It's April 8th.",
+    '오이시- 데스네!': 'oishii desu ne!', '맛있네요!': "It's delicious!", '토테모 스테키 데스네.': 'totemo suteki desu ne.', '정말 멋지네요.': "It's really lovely.",
+    '돈나 히토가 스키 데스카?': 'donna hito ga suki desu ka?', '어떤 사람을 좋아해요?': 'What kind of person do you like?', '야사시- 히토가 스키 데스.': 'yasashii hito ga suki desu.', '다정한 사람이 좋아요.': 'I like kind people.',
+    '라-멘야가 이치방 오이시- 데스.': 'rāmen-ya ga ichiban oishii desu.', '라멘집이 제일 맛있어요.': 'The ramen shop is the best.', '라-멘요리 스시노 호-가 스키 데스.': 'rāmen yori sushi no hō ga suki desu.', '라멘보다 초밥을 더 좋아해요.': 'I like sushi more than ramen.',
+    '코노 부라우스와 이쿠라 데스카?': 'kono burausu wa ikura desu ka?', '이 블라우스는 얼마예요?': 'How much is this blouse?', '센고햐쿠 엔 데스.': 'sengohyaku en desu.', '1,500엔입니다.': "It's 1,500 yen.",
+    '시타시- 토모다치가 이마스.': 'shitashii tomodachi ga imasu.', '친한 친구가 있어요. (사람 · 동물 = います)': 'I have a close friend. (people · animals = います)',
+    '코-엔니 벤치가 아리마스.': 'kōen ni benchi ga arimasu.', '공원에 벤치가 있어요. (물건 = あります)': 'There is a bench in the park. (things = あります)',
+    '마이니치 토쇼칸데 벵쿄-오 시마스.': 'mainichi toshokan de benkyō o shimasu.', '매일 도서관에서 공부를 해요.': 'I study at the library every day.', '난지니 오키마스카?': 'nanji ni okimasu ka?', '몇 시에 일어나요?': 'What time do you get up?',
+    '잇쇼니 콘사-토니 이키마셍카?': 'issho ni konsāto ni ikimasen ka?', '같이 콘서트에 가지 않을래요?': 'Shall we go to the concert together?', '이- 데스네. 이키마쇼-!': 'ii desu ne. ikimashō!', '좋아요. 가요!': "Sounds good. Let's go!",
+    '카이케-시니 나리타이 데스.': 'kaikeishi ni naritai desu.', '회계사가 되고 싶어요.': 'I want to become an accountant.', '니혼니 이키타이 데스.': 'Nihon ni ikitai desu.', '일본에 가고 싶어요.': 'I want to go to Japan.',
+    '춋토 테츠닷테 쿠다사이.': 'chotto tetsudatte kudasai.', '좀 도와주세요.': 'Please help me a little.', '코노 하코오 못테 쿠다사이.': 'kono hako o motte kudasai.', '이 상자를 들어 주세요.': 'Please carry this box.',
+    '요-코소! 칸반오 욘데 미테.': 'yōkoso! kanban o yonde mite.', '어서 와요! 간판을 읽어 봐요.': 'Welcome! Try reading the signs.', '하지메마시테. 켄타 데스.': 'hajimemashite. Kenta desu.', '처음 뵙겠습니다. 켄타입니다.': "Nice to meet you. I'm Kenta.",
+  };
+  const WHERE = { '아파트 · 아래 길 오른쪽': 'Apartment · lower street, right', '라멘집 · 아래 길': 'Ramen shop · lower street', '역 · 아래 길': 'Station · lower street', '옷가게 ふくや': 'Clothes shop ふくや',
+    '도서관 としょかん': 'Library としょかん', '집 앞': 'In front of home', '공원': 'Park', '카페': 'Café', '도서관': 'Library', '역': 'Station' };
+  Object.entries(WHERE).forEach(([k, v]) => { SUB['📍 ' + k] = '📍 ' + v; SUB['· ' + k] = '· ' + v; });
+  ['다이스케', '아오이', '켄타', '미오', '유이', '카이', '사토', '하나', '렌'].forEach(n => { EXACT[n] = n === '다이스케' ? 'Daisuke' : { 아오이: 'Aoi', 켄타: 'Kenta', 미오: 'Mio', 유이: 'Yui', 카이: 'Kai', 사토: 'Sato', 하나: 'Hana', 렌: 'Ren' }[n]; });
+  const NAMES = { 다이스케: 'Daisuke', 아오이: 'Aoi', 켄타: 'Kenta', 미오: 'Mio', 유이: 'Yui', 카이: 'Kai', 사토: 'Sato', 하나: 'Hana', 렌: 'Ren' };
+  const keys = Object.keys(SUB).sort((a, b) => b.length - a.length);
+  const tr = s => {
+    const k = s.trim(); if (k in EXACT) return s.replace(k, EXACT[k]);
+    let o = s; keys.forEach(x => { if (o.includes(x)) o = o.split(x).join(SUB[x]); });
+    o = o.replace(/(\d+) \/ (\d+)과/g, '$1 / $2 units').replace(/미션 (\d+)개/g, '$1 quests').replace(/문제 (\d+)개/g, '$1 questions').replace(/소품 (\d+) \/ (\d+)/g, 'items $1 / $2')
+      .replace(/(\d+)·(\d+)과/g, 'Unit $1–$2').replace(/(\d+)과/g, 'Unit $1');
+    Object.entries(NAMES).forEach(([a, b]) => { o = o.split(a).join(b); });
+    return o;
+  };
+  trL = tr;
+  let busy = false;
+  const walk = root => { const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT); let n; while ((n = w.nextNode())) { const v = tr(n.nodeValue); if (v !== n.nodeValue) n.nodeValue = v; } };
+  const stage = document.getElementById('stage');
+  new MutationObserver(() => { if (busy) return; busy = true; walk(stage); busy = false; }).observe(stage, { subtree: true, childList: true, characterData: true });
+  walk(stage); document.title = 'My Nihongo Hompy · Units 1–15';
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
